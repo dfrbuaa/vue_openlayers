@@ -8,6 +8,9 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "ol": "^6.4.3",
+    "stylus": "^0.54.8",
+    "stylus-loader": "^4.3.0",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",
     "vuex": "^3.4.0"
