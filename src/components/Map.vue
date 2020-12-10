@@ -26,8 +26,8 @@ import { defaults as defaultControls, ScaleLine, FullScreen, MousePosition } fro
 import { toStringHDMS, createStringXY } from "ol/coordinate";
 import Overlay from "ol/Overlay";
 import { fromLonLat, transform, toLonLat } from "ol/proj";
-import airports from '../assets/airports.json'
-import areaGeo from "../../public/china.json"
+import airports from '../assets/data/airports.json'
+import areaGeo from "../assets/data/china.json"
 
 export default {
   name: 'OlMap',
@@ -127,8 +127,8 @@ export default {
       let src = ""
       let text = ''
       type == "1"
-        ? (src = require("../../public/icon-ys.png"))
-        : (src = require("../../public/icon-ty.png"))
+        ? (src = require("../assets/img/icon-ys.png"))
+        : (src = require("../assets/img/icon-ty.png"))
       let _that = this
 
       var styleIcon = new Style({

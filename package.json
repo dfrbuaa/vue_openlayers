@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "leaflet": "^1.7.1",
     "ol": "^6.4.3",
     "stylus": "^0.54.8",
     "stylus-loader": "^4.3.0",
