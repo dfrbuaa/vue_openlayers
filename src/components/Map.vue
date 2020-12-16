@@ -78,13 +78,12 @@ export default {
     windyInit(options, windyAPI => {
 
       const { map } = windyAPI;
-      console.log(11111111111111111111111111111111111)
-      console.log(map)
-      console.log(11111111111111111111111111111111111)
       map.setMinZoom(4)
       map.setMaxZoom(9)
       this.map = map
-
+      console.log('111111111111111111111')
+      console.log(map.baseLayer)
+      console.log('111111111111111111111')
       // var streets = L.tileLayer("http://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/{z}/{y}/{x}", { id: 'windy' }).addTo(this.map)
 
 
@@ -94,12 +93,12 @@ export default {
       this.map.on('zoomend', (e) => {
         let zoom = map.getZoom();
         console.log(zoom)
-        if (zoom > 4) {
+        if (zoom >= 4) {
 
           this.addPoints(this.airports)
           console.log(this.myGroup)
         }
-        if (zoom <= 4) {
+        if (zoom < 4) {
           this.removePoints()
         }
 
@@ -124,7 +123,7 @@ export default {
       }
       var myStyle2 = {
         "color": "#fff",
-        "weight": 2,
+        "weight": 1.5,
         "opacity": 1,
         "fillOpacity": 0,
       }
@@ -163,16 +162,18 @@ export default {
 
       if (!this.layers.length) {
         for (var i = 0; i < coordinates.length; i++) {
-
+          var latlon = [coordinates[i].lat, coordinates[i].lon]
           var markers = L.marker([coordinates[i].lat, coordinates[i].lon], {
             icon: coordinates[i].demo == "1" ? icon1 : icon2,
-
-            title: coordinates[i].name, // 鼠标悬停在标记上是浏览器工具提示的文本
+            title: coordinates[i].name,
+          }).on('click', (e) => {
+            console.log(e)
+            this.map.setView(e.latlng, 8)
           })
 
           this.layers.push(markers)
-          this.myGroup_point = L.layerGroup(this.layers).setZIndex(9999);
-          this.map.addLayer(this.myGroup_point);
+          this.myGroup_point = L.layerGroup(this.layers)
+          this.map.addLayer(this.myGroup_point)
 
         }
       }
@@ -200,6 +201,9 @@ export default {
           var markers_text = L.marker([coordinates[i].lat, coordinates[i].lon], {
             icon: icon
 
+          }).on('click', (e) => {
+            console.log(e)
+            this.map.setView(e.latlng)
           })
 
           this.layers_text.push(markers_text)
