@@ -38,6 +38,8 @@ import shandong from "../assets/data/province/山东省.json"
 import shanghai from "../assets/data/province/上海市.json"
 import tianjin from "../assets/data/province/天津市.json"
 import fujian from "../assets/data/province/福建省.json"
+import taiwan from "../assets/data/province/台湾省.json"
+
 
 
 export default {
@@ -51,8 +53,10 @@ export default {
       border: null,
       province: [],
 
-      myGroup: null,
+      myGroup_point: null,
+      myGroup_text: null,
       layers: [],
+      layers_text: [],
       markers: null
 
     }
@@ -74,14 +78,17 @@ export default {
     windyInit(options, windyAPI => {
 
       const { map } = windyAPI;
+      console.log(11111111111111111111111111111111111)
+      console.log(map)
+      console.log(11111111111111111111111111111111111)
       map.setMinZoom(4)
       map.setMaxZoom(9)
       this.map = map
 
-      // var streets = L.tileLayer("http://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/{z}/{y}/{x}", { id: 'windy' }).addTo(map)
+      // var streets = L.tileLayer("http://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/{z}/{y}/{x}", { id: 'windy' }).addTo(this.map)
 
 
-      this.addPoints(this.airports)
+      // this.addPoints(this.airports)
 
 
       this.map.on('zoomend', (e) => {
@@ -101,6 +108,12 @@ export default {
         }
         if (zoom <= 6) {
           this.removeBorder()
+        }
+        if (zoom >= 7) {
+          this.addTexts(this.airports)
+        }
+        if (zoom < 7) {
+          this.removeTexts()
         }
       })
       var myStyle = {
@@ -135,14 +148,15 @@ export default {
 
       var icon1 = L.icon({
         iconUrl: require("../assets/img/icon-ys.png"),
-        iconSize: [12, 12],
-        iconAnchor: [6, 6],
+        iconSize: [14, 14],
+        iconAnchor: [7, 7],
 
       });
+
       var icon2 = L.icon({
         iconUrl: require("../assets/img/icon-ty.png"),
-        iconSize: [12, 12],
-        iconAnchor: [6, 6]
+        iconSize: [14, 14],
+        iconAnchor: [7, 7]
 
       });
 
@@ -152,12 +166,13 @@ export default {
 
           var markers = L.marker([coordinates[i].lat, coordinates[i].lon], {
             icon: coordinates[i].demo == "1" ? icon1 : icon2,
+
             title: coordinates[i].name, // 鼠标悬停在标记上是浏览器工具提示的文本
           })
 
           this.layers.push(markers)
-          this.myGroup = L.layerGroup(this.layers);
-          this.map.addLayer(this.myGroup);
+          this.myGroup_point = L.layerGroup(this.layers).setZIndex(9999);
+          this.map.addLayer(this.myGroup_point);
 
         }
       }
@@ -166,11 +181,41 @@ export default {
 
     removePoints () {
 
-      this.myGroup.clearLayers();
+      this.myGroup_point.clearLayers();
       this.layers = []
 
     },
 
+    addTexts (coordinates) {
+
+      if (!this.layers_text.length) {
+        for (var i = 0; i < coordinates.length; i++) {
+          var icon = L.divIcon({
+            html: `<div style="cursor: pointer">${coordinates[i].name}</div>`,
+            className: 'my-div-icon',
+            iconSize: 110,
+            iconAnchor: [55, 30]
+          })
+
+          var markers_text = L.marker([coordinates[i].lat, coordinates[i].lon], {
+            icon: icon
+
+          })
+
+          this.layers_text.push(markers_text)
+          this.myGroup_text = L.layerGroup(this.layers_text);
+          this.map.addLayer(this.myGroup_text);
+
+        }
+      }
+
+    },
+    removeTexts () {
+
+      this.myGroup_text.clearLayers();
+      this.layers_text = []
+
+    },
 
     addBorder () {
       if (!this.province.length) {
@@ -181,7 +226,8 @@ export default {
           "fillOpacity": 0,
           "cursor": 'default'
         }
-        this.province.push(heilongjiang, shandong, neimenggu, gansu, hebei, jilin, liaoning, ningxia, qinghai, shanxi, shanxi1, xizang, xinjiang, sichuan, chongqing, guangdong, guangxi, guizhou, henan, hubei, hunan, jiangsu, jiangxi, yunnan, zhejiang, anhui, fujian)
+
+        this.province.push(taiwan, heilongjiang, shandong, neimenggu, gansu, hebei, jilin, liaoning, ningxia, qinghai, shanxi, shanxi1, xizang, xinjiang, sichuan, chongqing, guangdong, guangxi, guizhou, henan, hubei, hunan, jiangsu, jiangxi, yunnan, zhejiang, anhui, fujian, hainan,)
         console.log(this.province)
         this.border = L.geoJSON(this.province, {
           style: myStyle1,
@@ -212,5 +258,46 @@ export default {
 }
 #windy .leaflet-interactive {
   cursor: default !important;
+}
+
+#windy #open-in-app {
+  visibility: hidden !important;
+}
+
+.my-div-icon {
+  line-height: 32px;
+  opacity: 1;
+  margin: 0;
+  text-align: center;
+  color: rgb(4, 34, 68);
+  width: 100px;
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.my-div-icon:hover {
+  line-height: 32px;
+  opacity: 1;
+  margin: 0;
+  text-align: center;
+  color: rgb(252, 249, 73);
+  width: 100px;
+  font-size: 17px;
+  font-weight: 800;
+}
+.basemap-layer {
+  visibility: hidden;
+}
+#windy .leaflet-container .leaflet-overlay-pane svg,
+#windy .leaflet-container .leaflet-marker-pane img,
+#windy .leaflet-container .leaflet-shadow-pane img,
+#windy .leaflet-container .leaflet-tile-pane img,
+#windy .leaflet-container img.leaflet-image-layer,
+#windy .leaflet-container .leaflet-tile {
+  cursor: pointer !important;
+}
+
+#plugin-menu .build-info {
+  visibility: hidden;
 }
 </style>
