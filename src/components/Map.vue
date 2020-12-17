@@ -1,5 +1,9 @@
 <template>
-  <div id="windy"></div>
+  <div id="all">
+    <div id="windy"></div>
+
+    <div id="picker" @click="picker">picker</div>
+  </div>
 </template>
 
 <script>
@@ -48,14 +52,28 @@ export default {
 
     // var airports = JSON.parse(airports)
     return {
+      options: {
+        // Required: API key
+        key: '4mXxk5p6WRZ9RELoqAv7yVVCctARD66h', // REPLACE WITH YOUR KEY !!!
+        // Put additional console output
+        verbose: true,
+        // Optional: Initial state of the map
+        lat: 38,
+        lon: 116,
+        zoom: 4,
+        overlays: 'airQ'
+      },
       airports: airports,
       map: null,
+      picker: null,
+
+      utils: null,
+      broadcast: null,
       border: null,
       province: [],
-
       myGroup_point: null,
       myGroup_text: null,
-      layers: [],
+      layers_point: [],
       layers_text: [],
       markers: null
 
@@ -63,49 +81,47 @@ export default {
   },
   mounted () {
 
-    // 初始化地图
-    const options = {
-      // Required: API key
-      key: '4mXxk5p6WRZ9RELoqAv7yVVCctARD66h', // REPLACE WITH YOUR KEY !!!
-      // Put additional console output
-      verbose: true,
-      // Optional: Initial state of the map
-      lat: 38,
-      lon: 116,
-      zoom: 5,
-    }
 
-    windyInit(options, windyAPI => {
 
-      const { map } = windyAPI;
+    windyInit(this.options, windyAPI => {
+
+      const { map, picker, utils, broadcast } = windyAPI;
+
       map.setMinZoom(4)
       map.setMaxZoom(10)
       this.map = map
+      this.picker = picker
+      this.picker1 = picker
+      this.utils = utils
+      this.broadcast = broadcast
       console.log('111111111111111111111')
-      console.log(map.baseLayer)
+      console.log(windyAPI)
       console.log('111111111111111111111')
-      // var streets = L.tileLayer("http://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/{z}/{y}/{x}", { id: 'windy' }).addTo(this.map)
+
 
 
       // this.addPoints(this.airports)
+      this.map.eachLayer(function (layer) {
+        // layer.remove()
 
-
+      })
+      // var streets = L.tileLayer("http://cache1.arcgisonline.cn/arcgis/rest/services/ChinaOnlineCommunity/MapServer/tile/{z}/{y}/{x}", { id: 'windy' }).addTo(this.map)
       this.map.on('zoomend', (e) => {
         let zoom = map.getZoom();
         console.log(zoom)
-        if (zoom >= 4) {
+        if (zoom >= 5) {
 
           this.addPoints(this.airports)
           console.log(this.myGroup)
         }
-        if (zoom < 4) {
+        if (zoom < 5) {
           this.removePoints()
         }
 
-        if (zoom > 6) {
+        if (zoom >= 6) {
           this.addBorder()
         }
-        if (zoom <= 6) {
+        if (zoom < 6) {
           this.removeBorder()
         }
         if (zoom >= 7) {
@@ -135,92 +151,16 @@ export default {
       }).addTo(this.map)
 
 
-    })
 
+
+
+
+    })
 
 
   },
 
   methods: {
-
-    addPoints (coordinates) {
-
-      var icon1 = L.icon({
-        iconUrl: require("../assets/img/icon-ys.png"),
-        iconSize: [14, 14],
-        iconAnchor: [7, 7],
-
-      });
-
-      var icon2 = L.icon({
-        iconUrl: require("../assets/img/icon-ty.png"),
-        iconSize: [14, 14],
-        iconAnchor: [7, 7]
-
-      });
-
-
-      if (!this.layers.length) {
-        for (var i = 0; i < coordinates.length; i++) {
-          var latlon = [coordinates[i].lat, coordinates[i].lon]
-          var markers = L.marker([coordinates[i].lat, coordinates[i].lon], {
-            icon: coordinates[i].demo == "1" ? icon1 : icon2,
-            title: coordinates[i].name,
-          }).on('click', (e) => {
-            console.log(e)
-            this.map.setView(e.latlng, 8)
-          })
-
-          this.layers.push(markers)
-          this.myGroup_point = L.layerGroup(this.layers)
-          this.map.addLayer(this.myGroup_point)
-
-        }
-      }
-
-    },
-
-    removePoints () {
-
-      this.myGroup_point.clearLayers();
-      this.layers = []
-
-    },
-
-    addTexts (coordinates) {
-
-      if (!this.layers_text.length) {
-        for (var i = 0; i < coordinates.length; i++) {
-          var icon = L.divIcon({
-            html: `<div style="cursor: pointer">${coordinates[i].name}</div>`,
-            className: 'my-div-icon',
-            iconSize: 110,
-            iconAnchor: [55, 30]
-          })
-
-          var markers_text = L.marker([coordinates[i].lat, coordinates[i].lon], {
-            icon: icon
-
-          }).on('click', (e) => {
-            console.log(e)
-            this.map.setView(e.latlng)
-          })
-
-          this.layers_text.push(markers_text)
-          this.myGroup_text = L.layerGroup(this.layers_text);
-          this.map.addLayer(this.myGroup_text);
-
-        }
-      }
-
-    },
-    removeTexts () {
-
-      this.myGroup_text.clearLayers();
-      this.layers_text = []
-
-    },
-
     addBorder () {
       if (!this.province.length) {
         let myStyle1 = {
@@ -241,9 +181,107 @@ export default {
 
     },
     removeBorder () {
-      this.border.clearLayers()
-      this.province = []
+      if (this.province.length) {
+        this.map.removeLayer(this.border)
+        // this.border.clearLayers()
+        this.province = []
+      }
     },
+    addPoints (coordinates) {
+
+      var icon1 = L.icon({
+        iconUrl: require("../assets/img/icon-ys.png"),
+        iconSize: [14, 14],
+        iconAnchor: [7, 7],
+
+      });
+
+      var icon2 = L.icon({
+        iconUrl: require("../assets/img/icon-ty.png"),
+        iconSize: [14, 14],
+        iconAnchor: [7, 7]
+
+      });
+
+
+      if (!this.layers_point.length) {
+        for (var i = 0; i < coordinates.length; i++) {
+          var latlon = [coordinates[i].lat, coordinates[i].lon]
+          var markers = L.marker([coordinates[i].lat, coordinates[i].lon], {
+            icon: coordinates[i].demo == "1" ? icon1 : icon2,
+            title: coordinates[i].name,
+            zIndexOffset: -999
+
+          }).on('click', (e) => {
+            console.log('eeeeeeeeeeeeeeeeeeeeeee')
+            console.log(e)
+            this.map.setView(e.latlng, 8)
+
+          })
+
+          this.layers_point.push(markers)
+          this.myGroup_point = L.layerGroup(this.layers_point)
+          this.map.addLayer(this.myGroup_point)
+
+        }
+      }
+
+    },
+
+    removePoints () {
+
+      if (this.layers_point.length) {
+        this.map.removeLayer(this.myGroup_point)
+        // this.myGroup_point.clearLayers();
+        this.layers_point = []
+      }
+    },
+
+    addTexts (coordinates) {
+
+      if (!this.layers_text.length) {
+        for (var i = 0; i < coordinates.length; i++) {
+          var icon = L.divIcon({
+            html: `<div style="cursor: pointer">${coordinates[i].name}</div>`,
+            className: 'my-div-icon',
+            iconSize: 110,
+            iconAnchor: [55, 30]
+          })
+
+          var markers_text = L.marker([coordinates[i].lat, coordinates[i].lon], {
+            icon: icon,
+            zIndexOffset: -999
+
+          }).on('click', (e) => {
+            console.log(e)
+
+            this.map.setView(e.latlng)
+            this.addPicker(e)
+          })
+
+          this.layers_text.push(markers_text)
+          this.myGroup_text = L.layerGroup(this.layers_text);
+          this.map.addLayer(this.myGroup_text, {
+
+          });
+
+        }
+      }
+
+    },
+    removeTexts () {
+      this.map.removeLayer(this.myGroup_text)
+      // this.myGroup_text.clearLayers();
+      this.layers_text = []
+
+    },
+    addPicker (para) {
+
+
+      this.picker.open({ lat: para.latlng.lat, lon: para.latlng.lng })
+
+
+    }
 
 
   }
@@ -252,7 +290,13 @@ export default {
 
 </script>
 <style  >
+#all {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
 #windy {
+  position: absolute;
   width: 100%;
   height: 100%;
 }
@@ -303,5 +347,13 @@ export default {
 
 #plugin-menu .build-info {
   visibility: hidden;
+}
+
+#picker {
+  position: absolute;
+  height: 120px;
+  width: 120px;
+  background: yellow;
+  z-index: 9999;
 }
 </style>
