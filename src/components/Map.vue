@@ -79,7 +79,7 @@ export default {
 
       const { map } = windyAPI;
       map.setMinZoom(4)
-      map.setMaxZoom(9)
+      map.setMaxZoom(10)
       this.map = map
       console.log('111111111111111111111')
       console.log(map.baseLayer)
