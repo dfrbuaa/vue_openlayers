@@ -1,8 +1,8 @@
 <template>
   <div id="all">
+    <div id="picker_open" @click="addPicker">picker</div>
+    <div id="picker_close" @click="closePicker">picker_close</div>
     <div id="windy"></div>
-
-    <div id="picker" @click="picker">picker</div>
   </div>
 </template>
 
@@ -210,7 +210,7 @@ export default {
           var markers = L.marker([coordinates[i].lat, coordinates[i].lon], {
             icon: coordinates[i].demo == "1" ? icon1 : icon2,
             title: coordinates[i].name,
-            zIndexOffset: -999
+            // zIndexOffset: -999
 
           }).on('click', (e) => {
             console.log('eeeeeeeeeeeeeeeeeeeeeee')
@@ -260,7 +260,7 @@ export default {
           })
 
           this.layers_text.push(markers_text)
-          this.myGroup_text = L.layerGroup(this.layers_text);
+          this.myGroup_text = L.layerGroup(this.layers_text)
           this.map.addLayer(this.myGroup_text, {
 
           });
@@ -275,14 +275,21 @@ export default {
       this.layers_text = []
 
     },
-    addPicker (para) {
+    addPicker () {
+
+      var center = this.map.getCenter()
+      console.log(center)
+      this.picker.open({ lat: center.lat, lon: center.lng })
 
 
-      this.picker.open({ lat: para.latlng.lat, lon: para.latlng.lng })
+    },
+    closePicker () {
 
+
+      this.picker.close()
+      console.log('close')
 
     }
-
 
   }
 
@@ -349,11 +356,19 @@ export default {
   visibility: hidden;
 }
 
-#picker {
+#picker_open {
   position: absolute;
   height: 120px;
   width: 120px;
   background: yellow;
-  z-index: 9999;
+  z-index: 99999999;
+}
+#picker_close {
+  left: 130px;
+  position: absolute;
+  height: 120px;
+  width: 120px;
+  background: red;
+  z-index: 99999999;
 }
 </style>
