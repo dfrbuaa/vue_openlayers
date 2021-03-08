@@ -1,7 +1,8 @@
 <template>
   <div id="all">
-    <div id="picker_open" @click="addPicker">picker</div>
-    <div id="picker_close" @click="closePicker">picker_close</div>
+    <!-- <div id="picker_open" @click="addPicker">picker</div>
+    <div id="picker_close" @click="closePicker">picker_close</div> -->
+    <!-- <div id="bottom_menu" v-show="bottom_menu()">laaaaaaaaaaaaaa</div> -->
     <div id="windy"></div>
   </div>
 </template>
@@ -54,7 +55,7 @@ export default {
     return {
       options: {
         // Required: API key
-        key: '4mXxk5p6WRZ9RELoqAv7yVVCctARD66h', // REPLACE WITH YOUR KEY !!!
+        key: 'uthOhmthqnMzBV8kxjjiYEvygzSmJjUV', // REPLACE WITH YOUR KEY !!!
         // Put additional console output
         verbose: true,
         // Optional: Initial state of the map
@@ -75,7 +76,8 @@ export default {
       myGroup_text: null,
       layers_point: [],
       layers_text: [],
-      markers: null
+      markers: null,
+      bottom_menu: false
 
     }
   },
@@ -102,7 +104,7 @@ export default {
 
       // this.addPoints(this.airports)
       this.map.eachLayer(function (layer) {
-        // layer.remove()
+        layer.setZIndex(-99999)
 
       })
       // var streets = L.tileLayer("http://cache1.arcgisonline.cn/arcgis/rest/services/ChinaOnlineCommunity/MapServer/tile/{z}/{y}/{x}", { id: 'windy' }).addTo(this.map)
@@ -291,8 +293,12 @@ export default {
 
     }
 
-  }
 
+
+
+
+
+  }
 }
 
 </script>
@@ -370,5 +376,14 @@ export default {
   width: 120px;
   background: red;
   z-index: 99999999;
+}
+#bottom_menu {
+  position: absolute;
+  width: 100%;
+  height: 300px;
+  z-index: 5;
+  bottom: 0;
+  background: rgb(253, 253, 253);
+  opacity: 0.8;
 }
 </style>
