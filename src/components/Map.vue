@@ -1,9 +1,9 @@
 <template>
   <div id="all">
-    <!-- <div id="picker_open" @click="addPicker">picker</div>
-    <div id="picker_close" @click="closePicker">picker_close</div> -->
-    <!-- <div id="bottom_menu" v-show="bottom_menu()">laaaaaaaaaaaaaa</div> -->
     <div id="windy"></div>
+    <div id="bottom_menu" ref="bottom_menu_ref" v-show="show_menu">
+      <div class="closing-x" @click="close_bottom_menu()"></div>
+    </div>
   </div>
 </template>
 
@@ -77,7 +77,7 @@ export default {
       layers_point: [],
       layers_text: [],
       markers: null,
-      bottom_menu: false
+      show_menu: false
 
     }
   },
@@ -96,9 +96,9 @@ export default {
       this.picker1 = picker
       this.utils = utils
       this.broadcast = broadcast
-      console.log('111111111111111111111')
-      console.log(windyAPI)
-      console.log('111111111111111111111')
+      // console.log('111111111111111111111')
+      // console.log(windyAPI)
+      // console.log('111111111111111111111')
 
 
 
@@ -218,7 +218,7 @@ export default {
             console.log('eeeeeeeeeeeeeeeeeeeeeee')
             console.log(e)
             this.map.setView(e.latlng, 8)
-
+            this.show_menu = true
           })
 
           this.layers_point.push(markers)
@@ -256,7 +256,7 @@ export default {
 
           }).on('click', (e) => {
             console.log(e)
-
+            this.show_menu = true
             this.map.setView(e.latlng)
             this.addPicker(e)
           })
@@ -291,8 +291,11 @@ export default {
       this.picker.close()
       console.log('close')
 
-    }
+    },
 
+    close_bottom_menu () {
+      this.show_menu = false
+    }
 
 
 
@@ -301,13 +304,15 @@ export default {
   }
 }
 
-</script>
+</script >
 <style  >
 #all {
   position: relative;
   width: 100%;
   height: 100%;
+  float: left;
 }
+
 #windy {
   position: absolute;
   width: 100%;
@@ -361,21 +366,8 @@ export default {
 #plugin-menu .build-info {
   visibility: hidden;
 }
-
-#picker_open {
-  position: absolute;
-  height: 120px;
-  width: 120px;
-  background: yellow;
-  z-index: 99999999;
-}
-#picker_close {
-  left: 130px;
-  position: absolute;
-  height: 120px;
-  width: 120px;
-  background: red;
-  z-index: 99999999;
+#windy #bottom #progress-bar #playpause {
+  z-index: 2 !important;
 }
 #bottom_menu {
   position: absolute;
@@ -384,6 +376,27 @@ export default {
   z-index: 5;
   bottom: 0;
   background: rgb(253, 253, 253);
-  opacity: 0.8;
+  opacity: 0.9;
+}
+.closing-x {
+  font-family: iconfont;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  color: white;
+  background-color: #9d0300;
+  cursor: pointer;
+  position: absolute;
+  font-size: 32px;
+  right: 5px;
+  top: -16px;
+  z-index: 10;
+  width: 32px;
+  height: 32px;
+  border-radius: 16px;
+}
+
+.closing-x::before {
+  content: '\e013';
 }
 </style>
