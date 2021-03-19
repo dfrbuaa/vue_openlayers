@@ -2,6 +2,7 @@
   <div id="all">
     <div id="bottom_menu" ref="bottom_menu_ref" v-show="show_menu">
       <div class="closing-x" @click="close_bottom_menu()"></div>
+      <Bottom-Menu-Data :nowPoint="nowPoint"></Bottom-Menu-Data>
     </div>
 
     <div id="windy"></div>
@@ -11,6 +12,7 @@
 <script>
 // import L from "leaflet";
 // import "leaflet/dist/leaflet.css";
+import bottom_menu_data from './bottom_menu_data'
 import airports from '../assets/data/airports.json'
 import areaGeo from "../assets/data/china.json"
 import areaGeo1 from "../assets/data/china_border.json"
@@ -50,13 +52,16 @@ import taiwan from "../assets/data/province/台湾省.json"
 
 export default {
   name: 'OlMap',
+  components:{
+    BottomMenuData:bottom_menu_data
+  },
   data () {
 
     // var airports = JSON.parse(airports)
     return {
       options: {
         // Required: API key
-        key: 'uthOhmthqnMzBV8kxjjiYEvygzSmJjUV', // REPLACE WITH YOUR KEY !!!
+        key: '4mXxk5p6WRZ9RELoqAv7yVVCctARD66h', // REPLACE WITH YOUR KEY !!!
         // Put additional console output
         verbose: true,
         // Optional: Initial state of the map
@@ -78,14 +83,12 @@ export default {
       layers_point: [],
       layers_text: [],
       markers: null,
-      show_menu: false
+      show_menu: false,
+      nowPoint:{}
 
     }
   },
   mounted () {
-
-
-
     windyInit(this.options, windyAPI => {
 
       const { map, picker, utils, broadcast } = windyAPI;
@@ -160,7 +163,6 @@ export default {
 
     })
 
-
   },
 
   methods: {
@@ -219,7 +221,9 @@ export default {
             console.log('eeeeeeeeeeeeeeeeeeeeeee')
             console.log(e)
             this.map.setView(e.latlng, 8)
-            this.show_menu = true
+           
+            
+
           })
 
           this.layers_point.push(markers)
@@ -256,10 +260,13 @@ export default {
             zIndexOffset: -999
 
           }).on('click', (e) => {
-            console.log(e)
+         
+            console.log(e.latlng)
+            console.log(e.latlng.lat)
             this.show_menu = true
-            this.map.setView(e.latlng)
-            this.addPicker(e)
+            this.map.setView(e.latlng)             
+          this.nowPoint=e.latlng
+            
           })
 
           this.layers_text.push(markers_text)
@@ -296,8 +303,8 @@ export default {
 
     close_bottom_menu () {
       this.show_menu = false
-    }
-
+    },
+    
 
 
 
