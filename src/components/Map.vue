@@ -1,9 +1,10 @@
 <template>
   <div id="all">
-    <div id="windy"></div>
     <div id="bottom_menu" ref="bottom_menu_ref" v-show="show_menu">
       <div class="closing-x" @click="close_bottom_menu()"></div>
     </div>
+
+    <div id="windy"></div>
   </div>
 </template>
 
