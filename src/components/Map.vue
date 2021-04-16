@@ -1,5 +1,26 @@
 <template>
   <div id="all">
+    <div id="tuli">
+      <li id="tuli1">
+        <span id="a1">图例</span>
+        <span id="s1">机场数量</span>
+      </li>
+      <li id="tuli2" @click="show_ys()">
+        <img src="../assets/img/icon-ys.png" alt="" />
+        <span id="a2">运输机场</span>
+        <span id="s2">251</span>
+      </li>
+      <li id="tuli3" @click="show_ty()">
+        <img src="../assets/img/icon-ty.png" alt="" />
+        <span id="a3">通航机场</span>
+        <span id="s3">182</span>
+      </li>
+      <li id="tuli4" @click="show_all()">
+        <span id="a4">显示全部</span>
+        <span id="s4">433</span>
+      </li>
+    </div>
+
     <div id="bottom_menu" ref="bottom_menu_ref" v-show="show_menu">
       <div class="closing-x" @click="close_bottom_menu()"></div>
       <Bottom-Menu-Data :nowPoint="nowPoint"></Bottom-Menu-Data>
@@ -13,7 +34,8 @@
 // import L from "leaflet";
 // import "leaflet/dist/leaflet.css";
 import bottom_menu_data from './bottom_menu_data'
-import airports from '../assets/data/airports.json'
+import point_ty from '../assets/data/point_ty.json'
+import point_ys from '../assets/data/point_ys.json'
 import areaGeo from "../assets/data/china.json"
 import areaGeo1 from "../assets/data/china_border.json"
 import heilongjiang from "../assets/data/province/黑龙江省.json"
@@ -52,13 +74,14 @@ import taiwan from "../assets/data/province/台湾省.json"
 
 export default {
   name: 'OlMap',
-  components:{
-    BottomMenuData:bottom_menu_data
+  components: {
+    BottomMenuData: bottom_menu_data
   },
   data () {
 
     // var airports = JSON.parse(airports)
     return {
+
       options: {
         // Required: API key
         key: '4mXxk5p6WRZ9RELoqAv7yVVCctARD66h', // REPLACE WITH YOUR KEY !!!
@@ -67,10 +90,12 @@ export default {
         // Optional: Initial state of the map
         lat: 38,
         lon: 116,
-        zoom: 4,
+        zoom: 5,
         overlays: 'airQ'
       },
-      airports: airports,
+      zoom: 1,
+      point_ty: point_ty,
+      point_ys: point_ys,
       map: null,
       picker: null,
 
@@ -84,16 +109,19 @@ export default {
       layers_text: [],
       markers: null,
       show_menu: false,
-      nowPoint:{}
+      nowPoint: {}
 
     }
+  },
+  watch () {
+
   },
   mounted () {
     windyInit(this.options, windyAPI => {
 
       const { map, picker, utils, broadcast } = windyAPI;
 
-      map.setMinZoom(4)
+      map.setMinZoom(5)
       map.setMaxZoom(10)
       this.map = map
       this.picker = picker
@@ -113,30 +141,19 @@ export default {
       })
       // var streets = L.tileLayer("http://cache1.arcgisonline.cn/arcgis/rest/services/ChinaOnlineCommunity/MapServer/tile/{z}/{y}/{x}", { id: 'windy' }).addTo(this.map)
       this.map.on('zoomend', (e) => {
-        let zoom = map.getZoom();
-        console.log(zoom)
-        if (zoom >= 5) {
+        this.zoom = map.getZoom();
+        console.log(this.zoom)
+        if (this.zoom === 7) {
+          this.addTexts(all_point)
+          console.log(this.layers_point.length)
 
-          this.addPoints(this.airports)
-          console.log(this.myGroup)
         }
-        if (zoom < 5) {
-          this.removePoints()
-        }
-
-        if (zoom >= 6) {
-          this.addBorder()
-        }
-        if (zoom < 6) {
-          this.removeBorder()
-        }
-        if (zoom >= 7) {
-          this.addTexts(this.airports)
-        }
-        if (zoom < 7) {
+        if (this.zoom < 7) {
           this.removeTexts()
         }
       })
+      var all_point = this.point_ty.concat(this.point_ys)
+      this.addPoints(all_point)
       var myStyle = {
         "color": "#fff",
         "weight": 1,
@@ -149,6 +166,7 @@ export default {
         "opacity": 1,
         "fillOpacity": 0,
       }
+      this.addBorder()
       var bb = L.geoJSON(areaGeo, {
         style: myStyle,
       }).addTo(this.map)
@@ -166,6 +184,37 @@ export default {
   },
 
   methods: {
+    show_ty () {
+      this.removePoints()
+      this.addPoints(this.point_ty)
+      if (this.zoom >= 7) {
+        this.removeTexts()
+        this.addTexts(this.point_ty)
+      }
+
+    },
+    show_ys () {
+      this.removePoints()
+      this.addPoints(this.point_ys)
+      if (this.zoom >= 7) {
+        this.removeTexts()
+        this.addTexts(this.point_ys)
+      }
+
+    },
+    show_all () {
+      this.removePoints()
+      this.addPoints(this.point_ys.concat(this.point_ty))
+      if (this.zoom >= 7) {
+        this.removeTexts()
+        this.addTexts(this.point_ys)
+      }
+
+    },
+
+
+
+
     addBorder () {
       if (!this.province.length) {
         let myStyle1 = {
@@ -193,23 +242,24 @@ export default {
       }
     },
     addPoints (coordinates) {
-
-      var icon1 = L.icon({
-        iconUrl: require("../assets/img/icon-ys.png"),
-        iconSize: [14, 14],
-        iconAnchor: [7, 7],
-
-      });
-
-      var icon2 = L.icon({
-        iconUrl: require("../assets/img/icon-ty.png"),
-        iconSize: [14, 14],
-        iconAnchor: [7, 7]
-
-      });
-
-
       if (!this.layers_point.length) {
+        var icon1 = L.icon({
+          iconUrl: require("../assets/img/icon-ys.png"),
+          iconSize: [14, 14],
+          iconAnchor: [7, 7],
+
+
+        });
+
+        var icon2 = L.icon({
+          iconUrl: require("../assets/img/icon-ty.png"),
+          iconSize: [14, 14],
+          iconAnchor: [7, 7],
+
+        });
+
+
+
         for (var i = 0; i < coordinates.length; i++) {
           var latlon = [coordinates[i].lat, coordinates[i].lon]
           var markers = L.marker([coordinates[i].lat, coordinates[i].lon], {
@@ -220,20 +270,21 @@ export default {
           }).on('click', (e) => {
             console.log('eeeeeeeeeeeeeeeeeeeeeee')
             console.log(e)
-            this.map.setView(e.latlng, 8)
-           
-            
+            this.map.setView(e.latlng, 7)
+
+
 
           })
 
           this.layers_point.push(markers)
-          this.myGroup_point = L.layerGroup(this.layers_point)
-          this.map.addLayer(this.myGroup_point)
+
 
         }
+        this.myGroup_point = L.layerGroup(this.layers_point)
+        this.map.addLayer(this.myGroup_point)
       }
-
-    },
+    }
+    ,
 
     removePoints () {
 
@@ -260,22 +311,23 @@ export default {
             zIndexOffset: -999
 
           }).on('click', (e) => {
-         
+
             console.log(e.latlng)
             console.log(e.latlng.lat)
             this.show_menu = true
-            this.map.setView(e.latlng)             
-          this.nowPoint=e.latlng
-            
+            this.map.setView(e.latlng)
+            this.nowPoint = e.latlng
+
           })
 
           this.layers_text.push(markers_text)
-          this.myGroup_text = L.layerGroup(this.layers_text)
-          this.map.addLayer(this.myGroup_text, {
 
-          });
 
         }
+        this.myGroup_text = L.layerGroup(this.layers_text)
+        this.map.addLayer(this.myGroup_text, {
+
+        });
       }
 
     },
@@ -304,107 +356,12 @@ export default {
     close_bottom_menu () {
       this.show_menu = false
     },
-    
-
-
-
-
   }
+
 }
+
 
 </script >
-<style  >
-#all {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  float: left;
-}
-
-#windy {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-}
-
-#windy #logo {
-  visibility: hidden !important;
-}
-#windy .leaflet-interactive {
-  cursor: default !important;
-}
-
-#windy #open-in-app {
-  visibility: hidden !important;
-}
-
-.my-div-icon {
-  line-height: 32px;
-  opacity: 1;
-  margin: 0;
-  text-align: center;
-  color: rgb(4, 34, 68);
-  width: 100px;
-  font-size: 17px;
-  font-weight: 800;
-}
-
-.my-div-icon:hover {
-  line-height: 32px;
-  opacity: 1;
-  margin: 0;
-  text-align: center;
-  color: rgb(252, 249, 73);
-  width: 100px;
-  font-size: 17px;
-  font-weight: 800;
-}
-.basemap-layer {
-  visibility: hidden;
-}
-#windy .leaflet-container .leaflet-overlay-pane svg,
-#windy .leaflet-container .leaflet-marker-pane img,
-#windy .leaflet-container .leaflet-shadow-pane img,
-#windy .leaflet-container .leaflet-tile-pane img,
-#windy .leaflet-container img.leaflet-image-layer,
-#windy .leaflet-container .leaflet-tile {
-  cursor: pointer !important;
-}
-
-#plugin-menu .build-info {
-  visibility: hidden;
-}
-#windy #bottom #progress-bar #playpause {
-  z-index: 2 !important;
-}
-#bottom_menu {
-  position: absolute;
-  width: 100%;
-  height: 300px;
-  z-index: 5;
-  bottom: 0;
-  background: rgb(253, 253, 253);
-  opacity: 0.9;
-}
-.closing-x {
-  font-family: iconfont;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
-  color: white;
-  background-color: #9d0300;
-  cursor: pointer;
-  position: absolute;
-  font-size: 32px;
-  right: 5px;
-  top: -16px;
-  z-index: 10;
-  width: 32px;
-  height: 32px;
-  border-radius: 16px;
-}
-
-.closing-x::before {
-  content: '\e013';
-}
+<style lang="css" >
+@import '../assets/css/map.css';
 </style>

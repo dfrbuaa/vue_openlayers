@@ -1,0 +1,160 @@
+#tuli {
+  position: absolute;
+  z-index: 6;
+  font-size: 14px;
+  color: #fff;
+  width: 180px;
+  height: 110px;
+  line-height: 26px;
+  background-color: #111;
+  opacity: 0.6;
+  right: 50px;
+  bottom: 49px;
+  right: 10px;
+  border-radius: 10px;
+
+  overflow: hidden;
+  padding: 10px;
+}
+#tuli1,
+#tuli2,
+#tuli3,
+#tuli4 {
+  list-style: none;
+}
+#tuli2,
+#tuli3,
+#tuli4 {
+  cursor: pointer;
+}
+#tuli2:hover,
+#tuli3:hover,
+#tuli4:hover {
+  font-weight: bold;
+}
+#s1,
+#s2,
+#s3,
+#s4 {
+  text-align: center;
+  position: absolute;
+  width: 80px;
+
+  right: 0;
+}
+#tuli2 > img {
+  position: relative;
+  width: 18px;
+  top: 3px;
+}
+#tuli3 > img {
+  position: relative;
+  width: 18px;
+  top: 3px;
+}
+#a2,
+#a3 {
+  width: 100px;
+  text-align: center;
+  padding-left: 7px;
+}
+
+#all {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  float: left;
+}
+
+#windy {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+#windy #logo {
+  visibility: hidden !important;
+}
+#windy .leaflet-interactive {
+  cursor: default !important;
+}
+
+#windy #open-in-app {
+  visibility: hidden !important;
+}
+
+.my-div-icon {
+  line-height: 32px;
+  opacity: 1;
+  margin: 0;
+  text-align: center;
+  color: rgb(1, 33, 70);
+  width: 100px;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.my-div-icon:hover,
+.my-div-icon:active {
+  line-height: 32px;
+  opacity: 1;
+  margin: 0;
+  text-align: center;
+  color: rgb(252, 249, 73);
+  width: 100px;
+  font-size: 14px;
+  font-weight: 800;
+}
+.basemap-layer {
+  visibility: hidden;
+}
+/*
+ #windy #bottom {
+  z-index: 999 !important;
+}
+ */
+#windy .leaflet-container .leaflet-overlay-pane svg,
+#windy .leaflet-container .leaflet-marker-pane img,
+#windy .leaflet-container .leaflet-shadow-pane img,
+#windy .leaflet-container .leaflet-tile-pane img,
+#windy .leaflet-container img.leaflet-image-layer,
+#windy .leaflet-container .leaflet-tile {
+  cursor: pointer !important;
+}
+
+#plugin-menu .build-info {
+  visibility: hidden;
+}
+#windy #bottom #progress-bar #playpause {
+  z-index: 2 !important;
+}
+#bottom_menu {
+  position: absolute;
+  width: 100%;
+  height: 300px;
+  z-index: 7;
+  bottom: 0;
+  background: rgb(253, 253, 253);
+  opacity: 0.9;
+}
+.closing-x {
+  font-family: iconfont;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  color: white;
+  background-color: #9d0300;
+  cursor: pointer;
+  position: absolute;
+  font-size: 32px;
+  right: 5px;
+  top: -16px;
+  z-index: 10;
+  width: 32px;
+  height: 32px;
+  border-radius: 16px;
+}
+
+.closing-x::before {
+  content: '\e013';
+}
