@@ -23,10 +23,10 @@ export default {
   },
 
   mounted () {
-
+    this.pointApi(this.nowPoint)
   },
   updated () {
-    this.throttle(this.pointApi(this.nowPoint), 120000)
+
   },
 
   methods: {
