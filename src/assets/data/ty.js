@@ -1,4 +1,4 @@
-{
+var point = [{
     "four": "----",
     "three": "---",
     "name": "上海龙华",
@@ -301,4 +301,16 @@
     "lat": 37.60527780,
     "lon": 117.8850000,
     "demo": "2"
-},
+}]
+
+import "../linq.js"
+
+var packJson = [
+    { "name": "zhang", "password": "123" },
+    { "name": "li", "password": "456" }
+];
+var name = "li";
+var de = Enumerable.From(packJson).Where("x=>x.name=='" + name + "'").ToArray();
+if (de != null && de[0] != null) {
+    console.log(de[0].password);
+}

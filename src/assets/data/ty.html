@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../linq.js"></script>
+
+    <script type="text/javascript">
+        var point = [{
+            "four": "----",
+            "three": "---",
+            "name": "上海龙华",
+            "lat": 31.33583333,
+            "lon": 121.4597222,
+            "demo": "3"
+        },
+        {
+            "four": "----",
+            "three": "---",
+            "name": "上海高东",
+            "lat": 31.33583333,
+            "lon": 121.6211111,
+            "demo": "3"
+        }]
+
+        var de = Enumerable.From(point).Where("x => x.lat === 31.33583333 && x.lon===121.6211111").ToArray();
+        console.log(de)
+        if (de != null && de[0] != null) {
+            console.log(de[0].name);
+        }
+    </script>
+</head>
+
+<body>
+
+</body>
+
+</html>

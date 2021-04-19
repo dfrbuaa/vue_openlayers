@@ -135,7 +135,7 @@
   z-index: 7;
   bottom: 0;
   background: rgb(253, 253, 253);
-  opacity: 0.9;
+  /* opacity: 0.9; */
 }
 .closing-x {
   font-family: iconfont;

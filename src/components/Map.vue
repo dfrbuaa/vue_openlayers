@@ -8,7 +8,7 @@
       <li id="tuli2" @click="show_ys()">
         <img src="../assets/img/icon-ys.png" alt="" />
         <span id="a2">运输机场</span>
-        <span id="s2">251</span>
+        <span id="s2">250</span>
       </li>
       <li id="tuli3" @click="show_ty()">
         <img src="../assets/img/icon-ty.png" alt="" />
@@ -17,13 +17,13 @@
       </li>
       <li id="tuli4" @click="show_all()">
         <span id="a4">显示全部</span>
-        <span id="s4">433</span>
+        <span id="s4">432</span>
       </li>
     </div>
 
     <div id="bottom_menu" ref="bottom_menu_ref" v-show="show_menu">
       <div class="closing-x" @click="close_bottom_menu()"></div>
-      <Bottom-Menu-Data :nowPoint="nowPoint"></Bottom-Menu-Data>
+      <Bottom-Menu-Data :nowPoint="nowPoint" :nowAirport="nowAirport"></Bottom-Menu-Data>
     </div>
 
     <div id="windy"></div>
@@ -33,6 +33,7 @@
 <script>
 // import L from "leaflet";
 // import "leaflet/dist/leaflet.css";
+import "../assets/linq";
 import bottom_menu_data from './bottom_menu_data'
 import point_ty from '../assets/data/point_ty.json'
 import point_ys from '../assets/data/point_ys.json'
@@ -109,7 +110,8 @@ export default {
       layers_text: [],
       markers: null,
       show_menu: false,
-      nowPoint: {}
+      nowPoint: {},
+      nowAirport: null,
 
     }
   },
@@ -143,8 +145,15 @@ export default {
       this.map.on('zoomend', (e) => {
         this.zoom = map.getZoom();
         console.log(this.zoom)
-        if (this.zoom === 7) {
+        if (this.zoom >= 7) {
+          if (this.layers_point.length === 250) {
+            this.addTexts(point_ys)
+          }
+          if (this.layers_point.length === 182) {
+            this.addTexts(point_ty)
+          }
           this.addTexts(all_point)
+
           console.log(this.layers_point.length)
 
         }
@@ -312,11 +321,19 @@ export default {
 
           }).on('click', (e) => {
 
-            console.log(e.latlng)
-            console.log(e.latlng.lat)
+
+            console.log(e)
+
             this.show_menu = true
             this.map.setView(e.latlng)
             this.nowPoint = e.latlng
+            let lat = e.latlng.lat;
+            let lng = e.latlng.lng;
+            let airport = Enumerable.From(this.point_ty.concat(this.point_ys)).Where(`x => x.lat === ${lat} && x.lon===${lng}`).ToArray();
+            this.nowAirport = airport;
+
+
+
 
           })
 
