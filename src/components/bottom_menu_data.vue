@@ -1,20 +1,61 @@
 <template>
   <div id="menu">
-    <div id="left"></div>
-    <div id="right">
-      <li>{{ Object.keys(this.nowAirport[0]) }}</li>
-      <!-- <li>机场名称:{{ this.nowAirport[0].name }}</li> -->
-      <!-- <li>机场分类:{{ this.nowAirport[0].机场分类 }}</li>
-      <li>允许飞行种类:{{ this.nowAirport[0].允许飞行种类 }}</li>
-      <li>机场性质:{{ this.nowAirport[0].机场性质 }}</li>
-      <li>驻场企业:{{ this.nowAirport[0].驻场企业 }}</li>
-      <li>常驻航空器:{{ this.nowAirport[0].常驻航空器 }}</li>
-      <li>机场运行时间:{{ this.nowAirport[0].机场运行时间 }}</li>
-      <li>机场标高/标高位置的大地水准面高差:{{ this.nowAirport[0].机场标高标高位置的大地水准面高差 }}</li>
-      <li>基准温度:{{ this.nowAirport[0].基准温度 }}</li>
-      <li>磁差:{{ this.nowAirport[0].磁差 }}</li>
-      <li>机场联系方式:{{ this.nowAirport[0].机场联系方式 }}</li> -->
-    </div>
+    <el-tabs :tab-position="tabPosition" type="border-card" style="height: 400px">
+      <el-tab-pane>
+        <span slot="label"><i class="el-icon-s-order"></i> 机场</span>
+
+        <table>
+          <tr>
+            <td>机场名称</td>
+            <td>{{ this.nowAirport[0].name }}</td>
+          </tr>
+          <tr>
+            <td>机场分类</td>
+            <td>{{ this.nowAirport[0].机场分类 }}</td>
+          </tr>
+          <tr>
+            <td>机场运行时间</td>
+            <td>{{ this.nowAirport[0].机场运行时间 }}</td>
+          </tr>
+          <tr>
+            <td>允许飞行种类</td>
+            <td>{{ this.nowAirport[0].允许飞行种类 }}</td>
+          </tr>
+          <tr>
+            <td>机场标高</td>
+            <td>{{ this.nowAirport[0].机场标高标高位置的大地水准面高差 }}</td>
+          </tr>
+          <tr>
+            <td>基准温度</td>
+            <td>{{ this.nowAirport[0].基准温度 }}</td>
+          </tr>
+          <tr>
+            <td>磁差</td>
+            <td>{{ this.nowAirport[0].磁差 }}</td>
+          </tr>
+          <tr>
+            <td>驻场企业</td>
+            <td>{{ this.nowAirport[0].驻场企业 }}</td>
+          </tr>
+          <tr>
+            <td>常驻航空器</td>
+            <td>{{ this.nowAirport[0].常驻航空器 }}</td>
+          </tr>
+          <tr>
+            <td>机场联系方式</td>
+            <td>{{ this.nowAirport[0].机场联系方式 }}</td>
+          </tr>
+        </table>
+      </el-tab-pane>
+      <el-tab-pane>
+        <span slot="label"><i class="el-icon-s-flag"></i> 实况</span>
+        实况
+      </el-tab-pane>
+      <el-tab-pane>
+        <span slot="label"><i class="el-icon-s-marketing"></i> 预测</span>
+        预测
+      </el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 <script>
@@ -25,6 +66,8 @@ export default {
   props: ["nowPoint", "nowAirport"],
   data () {
     return {
+      tabPosition: 'left',
+      show_right_ty: null,
       ts: [],
       units: [],
       wind_u_surface: [],
@@ -103,17 +146,31 @@ export default {
 #menu {
   width: 100%;
 }
-#left {
-  position: absolute;
-  width: 80%;
-  height: 300px;
-  padding-right: 350px;
+el-tabs {
+  height: 350px;
 }
-#right {
-  position: absolute;
-  right: 0px;
-  width: 20%;
-  height: 300px;
-  background: rgb(214 214 214);
+table {
+  font-size: 14px;
+}
+table tr :nth-child(1) {
+  width: 120px;
+}
+table tr :nth-child(2) {
+  width: 90%;
+}
+li {
+  list-style: none;
+}
+el-tab-pane::-webkit-scrollbar-track {
+  background-color: #e7eaf1;
+}
+
+el-tab-pane::-webkit-scrollbar {
+  width: 10px;
+}
+
+el-tab-pane::-webkit-scrollbar-thumb {
+  background-color: #5c5c6566;
+  border-radius: 10px;
 }
 </style>
