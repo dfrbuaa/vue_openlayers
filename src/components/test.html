@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        html,
+        body {
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+
+        body {
+            overflow: hidden;
+        }
+
+        .box {
+            width: 10000px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .content {
+            width: 100%;
+            height: 80%;
+            display: flex;
+            margin-left: 50px;
+            margin-right: 50px;
+            box-shadow: 0 2rem 4rem 0.25rem rgba(46, 43, 55, 0.575);
+            cursor: grab;
+        }
+
+        .content:active {
+            cursor: grabbing;
+        }
+
+        p {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            color: #ffffff;
+            font-size: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <div class="content">
+            <p style="background: #2e2b37" draggable="false">内容一<span>保持点击状态并向左滑动鼠标</span></p>
+            <p style="background: #6c5e86" draggable="false">内容二</p>
+            <p style="background: olive" draggable="false">内容三</p>
+            <p style="background: #de7172" draggable="false">内容四<span>保持点击状态并向右滑动鼠标</span></p>
+        </div>
+    </div>
+    <script>
+        let doc = document;
+        let html = doc.querySelector('html');
+        let content = doc.querySelector('.content');
+        // 禁止选中文字
+        doc.onselectstart = function () { return false; };
+
+        let startScroll = 0;
+        let startX = 0;
+        let previousX = 0;     // 保存上一次的clientX坐标
+        let currentX = 0;      // 获取每次移动的位置
+        let velocity = 0;      // 控制速度
+        let direction = 0;     // 控制左右滑动
+        let momentum = 0.875;  // 控制滑动距离
+        let momentumInterval = null;
+        let velocityInterval = null;
+
+        /**
+         * 鼠标移动事件
+         **/
+        function f(event) {
+            // 获取每次移动的位置
+            currentX = event.clientX;
+            html.scrollLeft = startScroll + (startX - currentX);
+        }
+
+        /**
+         * 鼠标离开.content
+         **/
+        content.onmouseleave = function () {
+            /**
+             * 移除.content的鼠标移动事件
+             * @see f
+             **/
+            content.removeEventListener('mousemove', f);
+        };
+
+        /**
+         * 鼠标点击事件
+         **/
+        content.onmousedown = function (event) {
+            startScroll = html.scrollLeft;
+            startX = event.clientX;
+            previousX = startX;
+            currentX = startX;
+            clearInterval(velocityInterval);
+            velocityInterval = setInterval(function () {
+                // previousX保存上一次移动鼠标的clientX值
+                // 慢速移动时currentX与previousX数值相同或者差值较小（慢速移动鼠标一直在一个点上）
+                // 快速滑动时鼠标左滑previousX大于currentX，右滑currentX大于previousX
+                // 原理：当快速移动时，松开鼠标的时候已经不在当时点击的点位上，50毫秒后就出现了2个变量的数值差
+                // 原因：鼠标移动时，不会存储所有的移动信息。尤其是在快速移动鼠标时
+                velocity = Math.abs(currentX - previousX);
+
+                // 正负数转换用于控制左右滑动
+                // 左滑动为正数，右滑动为负数
+                direction = (currentX > previousX ? -1 : 1);
+
+                previousX = currentX;
+
+            }, 50);
+
+            /**
+             * .content添加鼠标移动事件
+             * @see f
+             **/
+            this.addEventListener('mousemove', f)
+        };
+
+        /**
+         * 松开鼠标事件
+         **/
+        content.onmouseup = function () {
+            let num = 0;
+            clearInterval(velocityInterval);
+            clearInterval(momentumInterval);
+            num = velocity;
+            // 鼠标松开后开始执行滑动
+            momentumInterval = setInterval(function () {
+                // 滑动距离
+                // 滑动距离依次减小
+                html.scrollLeft = html.scrollLeft + (num * direction);
+
+                // 数值依次减小
+                num *= momentum;
+
+                // 小于1销毁定时器，滑动结束
+                if (Math.abs(num) < 1) {
+                    clearInterval(momentumInterval);
+                }
+            }, 15);
+
+            /**
+             * 移除.content的鼠标移动事件
+             * @see f
+             **/
+            content.removeEventListener('mousemove', f);
+        }
+    </script>
+</body>
+
+</html>

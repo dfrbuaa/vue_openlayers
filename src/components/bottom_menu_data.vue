@@ -68,8 +68,10 @@
         <span slot="label"><i class="el-icon-s-flag"></i> 实况</span>
       </el-tab-pane>
       <el-tab-pane>
-        <span @click="add()" slot="label"><i class="el-icon-s-marketing"></i> 预测</span>
-        <Forecast ref="forecast" />
+        <!-- @click="add()"  -->
+        <span slot="label"><i class="el-icon-s-marketing"></i> 预测</span>
+
+        <Forecast ref="forecast" :nowPoint="nowPoint" :nowAirport="nowAirport" />
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -84,64 +86,14 @@ export default {
   data () {
     return {
       tabPosition: 'left',
-      show_right_ty: null,
-      ts: [],
-      units: [],
-      wind_u_surface: [],
-      wind_v_surface: [],
-      temp_surface: [],
-      time: [],
-
-
-
     }
   },
   components: {
     Forecast
   },
   mounted () {
-
-
   },
-
-
   methods: {
-
-    pointApi (point) {
-
-      this.$axios({
-        method: 'post',
-        url: ' https://api.windy.com/api/point-forecast/v2',
-        data: {
-          "lat": parseFloat(point.lat),
-          "lon": parseFloat(point.lng),
-          "model": "gfs",
-          "parameters": ["wind", "temp", "pressure"],
-          "levels": ["surface"],
-          "key": "fd4RLs33Bb3Mg3qginrlRtYVrhZ0otLi"
-
-        },
-        header: {
-          'Content-Type': 'application/json'
-        }
-      }).then((res) => {
-        console.log('0000000000000000000000')
-
-        console.log(res.data)
-        this.wind_u_surface = res.data["wind_u-surface"];
-        this.temp_surface = res.data["temp-surface"];
-        let ts = res.data['ts']
-
-        ts.forEach(element => {
-          let time = new Date(element)
-          this.time.push(time)
-        });
-        console.log(this.time[0].toLocaleDateString())
-      }).catch((err) => {
-        console.log(err)
-      })
-
-    },
     add () {
       this.$refs.forecast.add_echarts('echarts')
     }
@@ -178,30 +130,25 @@ table tr :nth-child(2) {
 li {
   list-style: none;
 }
+
 /deep/ .el-tabs__content {
   padding: 10px 0 10px 10px;
   left: -10px;
 }
 
-#ys::-webkit-scrollbar-track,
-#ty ::-webkit-scrollbar-track {
+.airports::-webkit-scrollbar-track {
   background-color: #e7eaf1;
 }
 
-#ys::-webkit-scrollbar-track,
-#ty ::-webkit-scrollbar {
-  width: 10px;
+.airports::-webkit-scrollbar {
+  width: 8px;
 }
 
-#ys::-webkit-scrollbar-track,
-#ty ::-webkit-scrollbar-thumb {
+.airports::-webkit-scrollbar-thumb {
   background-color: #5c5c6566;
-  border-radius: 10px;
+  border-radius: 8px;
 }
-#airports {
-  position: relative;
-  right: 0;
-}
+
 #echarts {
   width: 1000px;
   height: 300px;

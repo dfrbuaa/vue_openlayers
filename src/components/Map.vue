@@ -332,9 +332,6 @@ export default {
             let airport = Enumerable.From(this.point_ty.concat(this.point_ys)).Where(`x => x.lat === ${lat} && x.lon===${lng}`).ToArray();
             this.nowAirport = airport;
 
-
-
-
           })
 
           this.layers_text.push(markers_text)
