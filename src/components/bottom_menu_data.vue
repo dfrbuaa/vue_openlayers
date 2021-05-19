@@ -3,62 +3,62 @@
     <el-tabs :tab-position="tabPosition" type="border-card" style="height: 400px">
       <el-tab-pane>
         <span slot="label"><i class="el-icon-s-order"></i> 机场</span>
-        <div id="ty" v-if="this.nowAirport[0].demo === '2'" style="background: rgb(247 227 216)">
+        <div id="ty" v-if="this.$store.state.nowAirport[0].demo === '2'" style="background: rgb(247 227 216)">
           <div class="airports">
             <table>
               <tr>
                 <td>机场名称</td>
-                <td>{{ this.nowAirport[0].name }}</td>
+                <td>{{ this.$store.state.nowAirport[0].name }}</td>
               </tr>
               <tr>
                 <td>机场分类</td>
-                <td>{{ this.nowAirport[0].机场分类 }}</td>
+                <td>{{ this.$store.state.nowAirport[0].机场分类 }}</td>
               </tr>
               <tr>
                 <td>机场运行时间</td>
-                <td>{{ this.nowAirport[0].机场运行时间 }}</td>
+                <td>{{ this.$store.state.nowAirport[0].机场运行时间 }}</td>
               </tr>
               <tr>
                 <td>允许飞行种类</td>
-                <td>{{ this.nowAirport[0].允许飞行种类 }}</td>
+                <td>{{ this.$store.state.nowAirport[0].允许飞行种类 }}</td>
               </tr>
               <tr>
                 <td>机场标高</td>
-                <td>{{ this.nowAirport[0].机场标高标高位置的大地水准面高差 }}</td>
+                <td>{{ this.$store.state.nowAirport[0].机场标高标高位置的大地水准面高差 }}</td>
               </tr>
               <tr>
                 <td>基准温度</td>
-                <td>{{ this.nowAirport[0].基准温度 }}</td>
+                <td>{{ this.$store.state.nowAirport[0].基准温度 }}</td>
               </tr>
               <tr>
                 <td>磁差</td>
-                <td>{{ this.nowAirport[0].磁差 }}</td>
+                <td>{{ this.$store.state.nowAirport[0].磁差 }}</td>
               </tr>
               <tr>
                 <td>驻场企业</td>
-                <td>{{ this.nowAirport[0].驻场企业 }}</td>
+                <td>{{ this.$store.state.nowAirport[0].驻场企业 }}</td>
               </tr>
               <tr>
                 <td>常驻航空器</td>
-                <td>{{ this.nowAirport[0].常驻航空器 }}</td>
+                <td>{{ this.$store.state.nowAirport[0].常驻航空器 }}</td>
               </tr>
               <tr>
                 <td>机场联系方式</td>
-                <td>{{ this.nowAirport[0].机场联系方式 }}</td>
+                <td>{{ this.$store.state.nowAirport[0].机场联系方式 }}</td>
               </tr>
             </table>
           </div>
         </div>
-        <div id="ys" v-if="this.nowAirport[0].demo === '1'" style="background: rgb(206 221 241)">
+        <div id="ys" v-if="this.$store.state.nowAirport[0].demo === '1'" style="background: rgb(206 221 241)">
           <div class="airports">
             <table>
               <tr>
                 <td>机场名称</td>
-                <td>{{ this.nowAirport[0].name }}</td>
+                <td>{{ this.$store.state.nowAirport[0].name }}</td>
               </tr>
               <tr>
                 <td>四字代码</td>
-                <td>{{ this.nowAirport[0].four }}</td>
+                <td>{{ this.$store.state.nowAirport[0].four }}</td>
               </tr>
             </table>
           </div>
@@ -71,7 +71,7 @@
         <!-- @click="add()"  -->
         <span slot="label"><i class="el-icon-s-marketing"></i> 预测</span>
 
-        <Forecast ref="forecast" :nowPoint="nowPoint" :nowAirport="nowAirport" />
+        <Forecast />
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -82,21 +82,24 @@
 
 import Forecast from './Forecast'
 export default {
-  props: ["nowPoint", "nowAirport"],
+
   data () {
     return {
       tabPosition: 'left',
+
     }
   },
   components: {
     Forecast
   },
   mounted () {
+
   },
   methods: {
     add () {
       this.$refs.forecast.add_echarts('echarts')
-    }
+    },
+
   }
 
 }

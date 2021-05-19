@@ -1,11 +1,13 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
-import store from './store'
+
 import axios from 'axios'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import echarts from 'echarts';
+import Vuex from 'vuex';
+import store from './store/index'
 Vue.prototype.$echarts = echarts
 Vue.use(ElementUI);
 
