@@ -23,7 +23,7 @@
 
     <div id="bottom_menu" ref="bottom_menu_ref" v-show="show_menu">
       <div class="closing-x" @click="close_bottom_menu()"></div>
-      <Bottom-Menu-Data :nowPoint="nowPoint" :nowAirport="nowAirport"></Bottom-Menu-Data>
+      <Bottom-Menu-Data></Bottom-Menu-Data>
     </div>
 
     <div id="windy"></div>
@@ -146,6 +146,7 @@ export default {
         this.zoom = map.getZoom();
         console.log(this.zoom)
         if (this.zoom >= 7) {
+          this.addBorder()
           if (this.layers_point.length === 250) {
             this.addTexts(point_ys)
           }
@@ -158,6 +159,7 @@ export default {
 
         }
         if (this.zoom < 7) {
+          this.removeBorder()
           this.removeTexts()
         }
       })
@@ -175,7 +177,7 @@ export default {
         "opacity": 1,
         "fillOpacity": 0,
       }
-      this.addBorder()
+
       var bb = L.geoJSON(areaGeo, {
         style: myStyle,
       }).addTo(this.map)
@@ -326,12 +328,15 @@ export default {
 
             this.show_menu = true
             this.map.setView(e.latlng)
-            this.nowPoint = e.latlng
+            this.$store.commit('changePoint', e.latlng);
+            console.log(this.$store.state.nowPoint)
             let lat = e.latlng.lat;
             let lng = e.latlng.lng;
             let airport = Enumerable.From(this.point_ty.concat(this.point_ys)).Where(`x => x.lat === ${lat} && x.lon===${lng}`).ToArray();
-            this.nowAirport = airport;
-
+            console.log(1111111111111111111111)
+            this.$store.commit('changeAirport', airport)
+            this.pointApi(this.$store.state.nowAirport)
+            console.log(this.$store.state.nowAirport)
           })
 
           this.layers_text.push(markers_text)
@@ -369,6 +374,67 @@ export default {
 
     close_bottom_menu () {
       this.show_menu = false
+    },
+    pointApi (point) {
+
+      this.$axios({
+        method: 'post',
+        url: ' https://api.windy.com/api/point-forecast/v2',
+        data: {
+          "lat": parseFloat(point.lat),
+          "lon": parseFloat(point.lng),
+          "model": "gfs",
+          "parameters": ["wind", "temp", "pressure"],
+          "levels": ["surface"],
+          "key": "fd4RLs33Bb3Mg3qginrlRtYVrhZ0otLi"
+
+        },
+        header: {
+          'Content-Type': 'application/json'
+        }
+      }).then((res) => {
+        console.log('0000000000000000000000')
+
+
+        console.log(res.data)
+
+        let temp = res.data["temp-surface"];
+        this.$store.commit('changeTemp', temp)
+
+        let ts = res.data['ts']
+
+        ts.forEach((val) => {
+          let time = new Date(val)
+          let year = time.getFullYear();
+          let month = time.getMonth() + 1;
+          let date = time.getDate();
+          let week = time.getDay()
+          let hours = time.getHours(); //获取当前小时数(0-23)
+          let w;
+          if (week === 1) w = '星期一';
+          if (week === 2) w = '星期二';
+          if (week === 3) w = '星期三';
+          if (week === 4) w = '星期四';
+          if (week === 5) w = '星期五';
+          if (week === 6) w = '星期六';
+          if (week === 0) w = '星期日';
+          let result = `${w}${date}`;
+          this.$store.commit('changeList', result)
+
+          this.$store.commit('changeHours', hours)
+
+        });
+
+        this.$store.commit('changeCol')
+
+
+
+
+
+      }).catch((err) => {
+        console.log(err)
+      })
+
     },
   }
 
