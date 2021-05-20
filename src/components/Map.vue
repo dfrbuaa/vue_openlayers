@@ -321,7 +321,7 @@ export default {
             icon: icon,
             zIndexOffset: -999
 
-          }).on('click', (e) => {
+          }).on('click', async (e) => {
 
 
             console.log(e)
@@ -335,8 +335,9 @@ export default {
             let airport = Enumerable.From(this.point_ty.concat(this.point_ys)).Where(`x => x.lat === ${lat} && x.lon===${lng}`).ToArray();
             console.log(1111111111111111111111)
             this.$store.commit('changeAirport', airport)
-            this.pointApi(this.$store.state.nowAirport)
+            await this.pointApi(this.$store.state.nowAirport)
             console.log(this.$store.state.nowAirport)
+
           })
 
           this.layers_text.push(markers_text)
@@ -375,9 +376,9 @@ export default {
     close_bottom_menu () {
       this.show_menu = false
     },
-    pointApi (point) {
+    async pointApi (point) {
 
-      this.$axios({
+      const res = await this.$axios({
         method: 'post',
         url: ' https://api.windy.com/api/point-forecast/v2',
         data: {
@@ -392,50 +393,53 @@ export default {
         header: {
           'Content-Type': 'application/json'
         }
-      }).then((res) => {
-        console.log('0000000000000000000000')
-
-
-        console.log(res.data)
-
-        let temp = res.data["temp-surface"];
-        this.$store.commit('changeTemp', temp)
-
-        let ts = res.data['ts']
-
-        ts.forEach((val) => {
-          let time = new Date(val)
-          let year = time.getFullYear();
-          let month = time.getMonth() + 1;
-          let date = time.getDate();
-          let week = time.getDay()
-          let hours = time.getHours(); //获取当前小时数(0-23)
-          let w;
-          if (week === 1) w = '星期一';
-          if (week === 2) w = '星期二';
-          if (week === 3) w = '星期三';
-          if (week === 4) w = '星期四';
-          if (week === 5) w = '星期五';
-          if (week === 6) w = '星期六';
-          if (week === 0) w = '星期日';
-          let result = `${w}${date}`;
-          this.$store.commit('changeList', result)
-
-          this.$store.commit('changeHours', hours)
-
-        });
-
-        this.$store.commit('changeCol')
-
-
-
-
-
-      }).catch((err) => {
-        console.log(err)
       })
+      if (res.status !== 200) {
+        return this.$message.error('获取表失败！')
+      }
+      console.log('0000000000000000000000')
 
-    },
+      console.log(res.data)
+
+      let temp = res.data["temp-surface"];
+      this.$store.commit('changeTemp', temp)
+
+      let ts = res.data['ts']
+
+      ts.forEach((val) => {
+        let time = new Date(val)
+        let year = time.getFullYear();
+        let month = time.getMonth() + 1;
+        let date = time.getDate();
+        let week = time.getDay()
+        let hours = time.getHours(); //获取当前小时数(0-23)
+        let w;
+        if (week === 1) w = '星期一';
+        if (week === 2) w = '星期二';
+        if (week === 3) w = '星期三';
+        if (week === 4) w = '星期四';
+        if (week === 5) w = '星期五';
+        if (week === 6) w = '星期六';
+        if (week === 0) w = '星期日';
+        let result = `${w}${date}`;
+        this.$store.commit('changeList', result)
+
+        this.$store.commit('changeHours', hours)
+
+      });
+      console.log(this.$store.state.temp)
+      this.$store.commit('changeCol')
+
+
+
+
+
+
+
+
+
+
+    }
   }
 
 }

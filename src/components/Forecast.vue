@@ -5,18 +5,12 @@
         <table style="width: 100%" class="myTable">
           <tr>
             <td :colspan="this.$store.state.col" class="date">{{ this.$store.state.list_day[0] }}</td>
-            <td :colspan="8" class="date date1" v-for="(item, i) in time" :key="i">{{ time[i] }}</td>
+            <td colspan="8" class="date date1" v-for="(item, i) in time" :key="i">{{ time[i] }}</td>
+            <td colspan="8" class="date date1">{{ list_day[list_day.length - 1] }}</td>
           </tr>
 
           <tr>
-            <td colspan="1" class="hour" v-for="(item, i) in hours" :key="i">{{ hours[i] }}</td>
-            <td colspan="1" id="hour"></td>
-            <td colspan="1" id="hour"></td>
-            <td colspan="1" id="hour"></td>
-            <td colspan="1" id="hour"></td>
-            <td colspan="1" id="hour"></td>
-            <td colspan="1" id="hour"></td>
-            <td colspan="1" id="hour"></td>
+            <td colspan="1" class="hour" v-for="(item, i) in hour" :key="i">{{ hour[i] }}</td>
           </tr>
           <tr>
             <td colspan="1" class="temp1" height="30px" v-for="(item, i) in temp" :key="i"></td>
@@ -27,7 +21,7 @@
         </table>
       </div>
     </div>
-    <div id="head" class="ll">{{ this.time0 }}</div>
+    <div id="head" class="ll">{{ this.$store.state.nowPoint }}</div>
     <div id="hpa" class="ll"></div>
   </div>
   <!-- <div id="echarts"></div> -->
@@ -35,24 +29,25 @@
 
 <script>
 import * as echarts from 'echarts';
-
+import { mapState, mapGetters } from 'vuex'
 export default {
 
   data () {
     return {
       show: null,
       tabPosition: 'left',
-      time: this.$store.getters.time,
-      hours: this.$store.state.hours,
-      temp: this.$store.state.temp,
 
 
     }
   },
+  computed: {
+    ...mapState(['temp', 'list_day']),
+    ...mapGetters(['time', 'hour'])
+  },
+  created () {
 
+  },
   mounted () {
-    console.log('ttttttttttttttttttttttttt')
-    console.log(this.time0)
 
   },
   methods: {
@@ -79,6 +74,70 @@ export default {
       });
 
       // 基于准备好的dom，初始化echarts实例
+
+    },
+    async pointApi (point) {
+
+      const res = await this.$axios({
+        method: 'post',
+        url: ' https://api.windy.com/api/point-forecast/v2',
+        data: {
+          "lat": parseFloat(point.lat),
+          "lon": parseFloat(point.lng),
+          "model": "gfs",
+          "parameters": ["wind", "temp", "pressure"],
+          "levels": ["surface"],
+          "key": "fd4RLs33Bb3Mg3qginrlRtYVrhZ0otLi"
+
+        },
+        header: {
+          'Content-Type': 'application/json'
+        }
+      })
+      if (res.status !== 200) {
+        return this.$message.error('获取表失败！')
+      }
+      console.log('0000000000000000000000')
+
+      console.log(res.data)
+
+      let temp = res.data["temp-surface"];
+      this.$store.commit('changeTemp', temp)
+
+      let ts = res.data['ts']
+
+      ts.forEach((val) => {
+        let time = new Date(val)
+        let year = time.getFullYear();
+        let month = time.getMonth() + 1;
+        let date = time.getDate();
+        let week = time.getDay()
+        let hours = time.getHours(); //获取当前小时数(0-23)
+        let w;
+        if (week === 1) w = '星期一';
+        if (week === 2) w = '星期二';
+        if (week === 3) w = '星期三';
+        if (week === 4) w = '星期四';
+        if (week === 5) w = '星期五';
+        if (week === 6) w = '星期六';
+        if (week === 0) w = '星期日';
+        let result = `${w}${date}`;
+        this.$store.commit('changeList', result)
+
+        this.$store.commit('changeHours', hours)
+
+      });
+
+      this.$store.commit('changeCol')
+
+
+
+
+
+
+
+
+
 
     }
   }
@@ -140,6 +199,7 @@ table {
 }
 .date {
   font-size: 14px;
+  min-width: 80px;
 }
 
 .date1,

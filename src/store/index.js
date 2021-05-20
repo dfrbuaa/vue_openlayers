@@ -40,6 +40,7 @@ export default new Vuex.Store({
       state.time0 = state.time.shift()
     },
     changeHours (state, msg) {
+
       state.hours.push(msg)
     },
     changeCol (state, msg) {
@@ -49,8 +50,13 @@ export default new Vuex.Store({
   },
   getters: {
     time: function (state) {
-      let t1 = Array.from(new Set(state.list_day))
-      t1.shift()
+      let t1 = Array.from(new Set(state.list_day));
+      t1.pop();
+      t1.shift();
+      return t1
+    },
+    hour: function (state) {
+      let t1 = state.hours.slice(0, 80)
       return t1
     }
   },
