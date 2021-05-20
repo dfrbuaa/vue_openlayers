@@ -405,7 +405,8 @@ export default {
       this.$store.commit('changeTemp', temp)
 
       let ts = res.data['ts']
-
+      let list = [];
+      let hours_list = [];
       ts.forEach((val) => {
         let time = new Date(val)
         let year = time.getFullYear();
@@ -422,11 +423,15 @@ export default {
         if (week === 6) w = '星期六';
         if (week === 0) w = '星期日';
         let result = `${w}${date}`;
-        this.$store.commit('changeList', result)
+        list.push(result)
+        hours_list.push(hours)
 
-        this.$store.commit('changeHours', hours)
 
       });
+      let times = Array.from(new Set(list))
+      this.$store.commit('changeTime', times)
+      this.$store.commit('changeHours', hours_list)
+
       console.log(this.$store.state.temp)
       this.$store.commit('changeCol')
 

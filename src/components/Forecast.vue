@@ -4,13 +4,12 @@
       <div id="tt">
         <table style="width: 100%" class="myTable">
           <tr>
-            <td :colspan="this.$store.state.col" class="date">{{ this.$store.state.list_day[0] }}</td>
+            <td :colspan="this.$store.state.col" class="date">{{ this.$store.state.time[0] }}</td>
             <td colspan="8" class="date date1" v-for="(item, i) in time" :key="i">{{ time[i] }}</td>
-            <td colspan="8" class="date date1">{{ list_day[list_day.length - 1] }}</td>
           </tr>
 
           <tr>
-            <td colspan="1" class="hour" v-for="(item, i) in hour" :key="i">{{ hour[i] }}</td>
+            <td colspan="1" class="hour" v-for="(item, i) in hours" :key="i">{{ hours[i] }}</td>
           </tr>
           <tr>
             <td colspan="1" class="temp1" height="30px" v-for="(item, i) in temp" :key="i"></td>
@@ -21,9 +20,23 @@
         </table>
       </div>
     </div>
-    <div id="head" class="ll">{{ this.$store.state.nowPoint }}</div>
-    <div id="hpa" class="ll"></div>
+    <div id="head" class="ll">
+      <div>时间</div>
+      <div>温度</div>
+    </div>
+    <div id="hpa" class="ll">
+      <el-radio-group class="check" v-model="radio" size="medium">
+        <el-radio-button class="hpa">hpa</el-radio-button>
+        <el-radio-button class="hpa" label="800"></el-radio-button>
+        <el-radio-button class="hpa" label="850"></el-radio-button>
+        <el-radio-button class="hpa" label="900"></el-radio-button>
+        <el-radio-button class="hpa" label="925"></el-radio-button>
+        <el-radio-button class="hpa" label="950"></el-radio-button>
+        <el-radio-button class="hpa" label="1000"></el-radio-button>
+      </el-radio-group>
+    </div>
   </div>
+
   <!-- <div id="echarts"></div> -->
 </template>
 
@@ -36,13 +49,13 @@ export default {
     return {
       show: null,
       tabPosition: 'left',
-
+      radio: '1000'
 
     }
   },
   computed: {
-    ...mapState(['temp', 'list_day']),
-    ...mapGetters(['time', 'hour'])
+    ...mapState(['temp', 'list_day', 'time', 'hours']),
+
   },
   created () {
 
@@ -163,7 +176,7 @@ export default {
   width: 100%;
 }
 #tt {
-  margin: 0 30px 0 100px;
+  margin: 0 60px 0 80px;
   height: 280px;
   overflow: auto;
 }
@@ -175,36 +188,95 @@ table {
   text-align: left;
   padding: 0px;
 }
-#hpa {
-  margin-left: -30px;
-  width: 30px;
+#hpa .check {
+  padding: 10px 2px 10px 2px;
+  display: flex;
+  margin-left: -35px;
+  width: 34px;
   height: 280px;
-
-  background: red;
+  background: linear-gradient(360deg, #4a95bb, #52ab80, transparent);
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 10px;
+  border: 1px solid #dfe4ed;
+  border-radius: 4px;
+  box-sizing: border-box;
+  text-align: center;
 }
+
 .ll {
   float: left;
   height: 280px;
 }
 #head {
   margin-left: -100%;
-  width: 100px;
-  background-color: rgb(141, 213, 231);
+  width: 80px;
+  background-color: rgb(245 247 250);
+  border-right: 1px solid rgb(223 228 237);
 }
 .date,
 .hour,
 .temp,
 .temp1 {
-  padding: 0 7px 7px 7px;
+  padding: 1px 7px 7px 7px;
 }
 .date {
   font-size: 14px;
   min-width: 80px;
+  border-bottom: 1px solid rgb(223 228 237);
 }
 
 .date1,
 .hour,
 .temp {
-  border-left: 1px solid rgb(168, 167, 167);
+  border-left: 1px solid rgb(223 228 237);
+}
+#head {
+  margin-left: -100%;
+  width: 80px;
+  background-color: rgb(245 247 250);
+  border-right: 1px solid rgb(223 228 237);
+  border-top: 1px solid rgb(223 228 237);
+  top: 27px;
+  position: relative;
+  height: 254px;
+}
+#head > div {
+  font-size: 13px;
+  width: 80px;
+  padding: 0 5px 5px 5px;
+  text-align: right;
+  box-sizing: border-box;
+}
+
+#head :nth-child(1) {
+  padding: 1px 7px 7px 7px;
+}
+#head :nth-child(2) {
+  padding: 37px 7px 7px 7px;
+}
+
+/deep/.el-radio-button__inner {
+  white-space: nowrap;
+  background: transparent;
+  /* border: 1px solid #DCDFE6; */
+  font-weight: 500;
+  border-left: 0;
+  /* color: #606266; */
+  -webkit-appearance: none;
+  text-align: center;
+  box-sizing: border-box;
+  outline: 0;
+  margin: 0;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  padding: 11px 0px;
+  font-size: 10px;
+  border: 0px;
+}
+/deep/.el-radio-button:first-child .el-radio-button__inner {
+  border: 0;
+  border-radius: 0px;
 }
 </style>
