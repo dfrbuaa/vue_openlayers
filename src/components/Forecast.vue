@@ -3,31 +3,56 @@
     <div id="ddd" class="ll">
       <div id="tt">
         <table style="width: 100%" class="myTable">
-          <tr>
+          <tr style="text-align: left">
             <td :colspan="this.$store.state.col" class="date">{{ this.$store.state.time[0] }}</td>
-            <td colspan="8" class="date date1" v-for="(item, i) in time" :key="i">{{ time[i] }}</td>
+            <td colspan="8" class="date" v-for="(item, i) in time" :key="i">{{ time[i] }}</td>
           </tr>
 
           <tr>
             <td colspan="1" class="hour" v-for="(item, i) in hours" :key="i">{{ hours[i] }}</td>
           </tr>
           <tr>
-            <td colspan="1" class="temp1" height="30px" v-for="(item, i) in temp" :key="i"></td>
+            <td colspan="1" id="temp1" height="25px" v-for="(item, i) in temp" :key="i"></td>
           </tr>
           <tr>
             <td colspan="1" class="temp" v-for="(item, i) in temp" :key="i">{{ temp[i] }}</td>
+          </tr>
+          <tr>
+            <td colspan="1" class="dewpoint" v-for="(item, i) in dewpoint" :key="i">{{ dewpoint[i] }}</td>
+          </tr>
+          <tr>
+            <td colspan="1" class="rh" v-for="(item, i) in rh" :key="i">{{ rh[i] }}</td>
+          </tr>
+          <tr>
+            <td colspan="1" class="gh" v-for="(item, i) in gh" :key="i">{{ gh[i] }}</td>
+          </tr>
+          <tr>
+            <td colspan="1" id="temp2" height="25px" v-for="(item, i) in temp" :key="i"></td>
+          </tr>
+          <tr>
+            <td colspan="1" class="wind_s" v-for="(item, i) in wind_s" :key="i">{{ wind_s[i] }}</td>
+          </tr>
+          <tr>
+            <td colspan="1" class="wind_d" v-for="(item, i) in wind_d" :key="i">
+              <div id="icon" :style="{ transform: `rotate(${wind_d[i] + 135}deg)` }"><i class="el-icon-position" /></div>
+            </td>
           </tr>
         </table>
       </div>
     </div>
     <div id="head" class="ll">
-      <div>时间</div>
-      <div>温度</div>
+      <div>时间 <i class="el-icon-time"></i></div>
+      <div>温度<i>℃</i></div>
+      <div>露点温度<i>℃</i></div>
+      <div>湿度<i>%</i></div>
+      <div>位势高度<i>m</i></div>
+      <div>风速<i>m/s</i></div>
+      <div>风向<i class="el-icon-s-flag"></i></div>
     </div>
     <div id="hpa" class="ll">
       <el-radio-group class="check" v-model="radio" size="medium">
-        <el-radio-button class="hpa">hpa</el-radio-button>
-        <el-radio-button class="hpa" label="800"></el-radio-button>
+        <div class="hpa">hpa</div>
+        <el-radio-button @click="pointApi(nowAirport, '800h')" class="hpa" label="800"></el-radio-button>
         <el-radio-button class="hpa" label="850"></el-radio-button>
         <el-radio-button class="hpa" label="900"></el-radio-button>
         <el-radio-button class="hpa" label="925"></el-radio-button>
@@ -44,17 +69,23 @@
 import * as echarts from 'echarts';
 import { mapState, mapGetters } from 'vuex'
 export default {
-
+  props: {
+    pointApi: {
+      type: Function,
+      default: null
+    }
+  },
   data () {
+
     return {
       show: null,
       tabPosition: 'left',
-      radio: '1000'
+      radio: '1000',
 
     }
   },
   computed: {
-    ...mapState(['temp', 'list_day', 'time', 'hours']),
+    ...mapState(['nowAirport', 'temp', 'time', 'hours', 'dewpoint', 'rh', 'gh', 'wind_s', 'wind_d']),
 
   },
   created () {
@@ -185,7 +216,7 @@ table {
   font-size: 13px;
   height: 20px;
   border-collapse: collapse;
-  text-align: left;
+  text-align: center;
   padding: 0px;
 }
 #hpa .check {
@@ -214,11 +245,10 @@ table {
   background-color: rgb(245 247 250);
   border-right: 1px solid rgb(223 228 237);
 }
-.date,
-.hour,
-.temp,
-.temp1 {
-  padding: 1px 7px 7px 7px;
+
+#temp1,
+#temp2 {
+  border: 0px;
 }
 .date {
   font-size: 14px;
@@ -226,10 +256,9 @@ table {
   border-bottom: 1px solid rgb(223 228 237);
 }
 
-.date1,
-.hour,
-.temp {
+table > tr > td {
   border-left: 1px solid rgb(223 228 237);
+  padding: 1px 7px 7px 7px;
 }
 #head {
   margin-left: -100%;
@@ -244,18 +273,19 @@ table {
 #head > div {
   font-size: 13px;
   width: 80px;
-  padding: 0 5px 5px 5px;
+  padding: 1px 7px 7px 7px;
   text-align: right;
   box-sizing: border-box;
 }
 
-#head :nth-child(1) {
-  padding: 1px 7px 7px 7px;
+#head :nth-child(2),
+#head :nth-child(6) {
+  padding: 33px 7px 7px 7px;
 }
-#head :nth-child(2) {
-  padding: 37px 7px 7px 7px;
+.hpa {
+  border-bottom: 1px solid #f5f7fa;
+  height: 38px;
 }
-
 /deep/.el-radio-button__inner {
   white-space: nowrap;
   background: transparent;
@@ -271,12 +301,27 @@ table {
   position: relative;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-  padding: 11px 0px;
+  padding: 12px 0px;
   font-size: 10px;
   border: 0px;
 }
 /deep/.el-radio-button:first-child .el-radio-button__inner {
   border: 0;
   border-radius: 0px;
+}
+/deep/.el-radio-button__orig-radio:checked + .el-radio-button__inner {
+  color: #007dff;
+  background-color: #ffffff;
+  border: 2px solid rgb(223 228 237);
+  box-shadow: 0 0 0 0 #ffffff;
+  right: 3px;
+  width: 34px;
+  top: -1px;
+}
+/deep/.el-radio-button:last-child .el-radio-button__inner {
+  border-radius: 0;
+}
+/deep/.el-icon-position:before {
+  font-size: 15px;
 }
 </style>
