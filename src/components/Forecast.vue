@@ -69,12 +69,7 @@
 import * as echarts from 'echarts';
 import { mapState, mapGetters } from 'vuex'
 export default {
-  props: {
-    pointApi: {
-      type: Function,
-      default: null
-    }
-  },
+
   data () {
 
     return {
@@ -120,59 +115,6 @@ export default {
       // 基于准备好的dom，初始化echarts实例
 
     },
-    async pointApi (point) {
-
-      const res = await this.$axios({
-        method: 'post',
-        url: ' https://api.windy.com/api/point-forecast/v2',
-        data: {
-          "lat": parseFloat(point.lat),
-          "lon": parseFloat(point.lng),
-          "model": "gfs",
-          "parameters": ["wind", "temp", "pressure"],
-          "levels": ["surface"],
-          "key": "fd4RLs33Bb3Mg3qginrlRtYVrhZ0otLi"
-
-        },
-        header: {
-          'Content-Type': 'application/json'
-        }
-      })
-      if (res.status !== 200) {
-        return this.$message.error('获取表失败！')
-      }
-      console.log('0000000000000000000000')
-
-      console.log(res.data)
-
-      let temp = res.data["temp-surface"];
-      this.$store.commit('changeTemp', temp)
-
-      let ts = res.data['ts']
-
-      ts.forEach((val) => {
-        let time = new Date(val)
-        let year = time.getFullYear();
-        let month = time.getMonth() + 1;
-        let date = time.getDate();
-        let week = time.getDay()
-        let hours = time.getHours(); //获取当前小时数(0-23)
-        let w;
-        if (week === 1) w = '星期一';
-        if (week === 2) w = '星期二';
-        if (week === 3) w = '星期三';
-        if (week === 4) w = '星期四';
-        if (week === 5) w = '星期五';
-        if (week === 6) w = '星期六';
-        if (week === 0) w = '星期日';
-        let result = `${w}${date}`;
-        this.$store.commit('changeList', result)
-
-        this.$store.commit('changeHours', hours)
-
-      });
-
-      this.$store.commit('changeCol')
 
 
 
@@ -183,7 +125,8 @@ export default {
 
 
 
-    }
+
+
   }
 }
 

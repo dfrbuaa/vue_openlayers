@@ -71,7 +71,7 @@
         <!-- @click="add()"  -->
         <span slot="label"><i class="el-icon-s-marketing"></i> 预测</span>
 
-        <Forecast :pointApi="pointApi" />
+        <Forecast />
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -82,12 +82,8 @@
 
 import Forecast from './Forecast'
 export default {
-  props: {
-    pointApi: {
-      type: Function,
-      default: null
-    }
-  },
+
+
   data () {
     return {
       tabPosition: 'left',
