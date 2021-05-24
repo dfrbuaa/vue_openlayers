@@ -340,6 +340,7 @@ export default {
             console.log(1111111111111111111111)
             this.$store.commit('changeAirport', airport)
             await this.$store.commit('pointApi', '1000h')
+            await this.$store.commit('pointApi1',)
 
             console.log('222222222222222222222222')
             // this.$store.dispatch('postData', '1000h')

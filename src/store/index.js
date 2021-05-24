@@ -8,6 +8,8 @@ export default new Vuex.Store({
   state: {
     nowPoint: null,
     nowAirport: [],
+    time: [],
+    time1: null,
     col: null,
     hours: [],
     temp: [],
@@ -78,6 +80,7 @@ export default new Vuex.Store({
 
       });
       let times = Array.from(new Set(list))
+      state.time1 = times.shift();
       state.time = times;
       state.hours = hours_list;
       state.col = state.col = 8 - Math.floor(state.hours[0] / 3);
@@ -155,6 +158,38 @@ export default new Vuex.Store({
       state.wind_d = wind_d;
 
 
+    },
+    async pointApi1 (state) {
+      const res = await axios({
+        method: 'post',
+        url: 'http://route.showapi.com/9-5',
+        // dataType: 'json',
+        data: {
+
+          "showapi_appid": '644698', //这里需要改成自己的appid
+          "showapi_sign": '915e1809e7da40d18c1c602f149029ab',  //这里需要改成自己的应用的密钥secret
+          "from": "5",
+          "lng": "116.2278",
+          "lat": "40.242266",
+
+        },
+        transformRequest: [
+          function (data) {
+            let ret = ''
+            for (let it in data) {
+              ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+            }
+            ret = ret.substring(0, ret.lastIndexOf('&'));
+            return ret
+          }
+        ],
+        header: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      })
+      console.log('pppppppppppppppppp')
+      let data = res.data.showapi_res_body;
+      console.log(data)
     }
 
   },

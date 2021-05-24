@@ -4,7 +4,7 @@
       <div id="tt">
         <table style="width: 100%" class="myTable">
           <tr style="text-align: left">
-            <td :colspan="this.$store.state.col" class="date">{{ this.$store.state.time[0] }}</td>
+            <td :colspan="this.$store.state.col" class="date">{{ this.$store.state.time1 }}</td>
             <td colspan="8" class="date" v-for="(item, i) in time" :key="i">{{ time[i] }}</td>
           </tr>
 
@@ -50,14 +50,14 @@
       <div>风向<i class="el-icon-s-flag"></i></div>
     </div>
     <div id="hpa" class="ll">
-      <el-radio-group class="check" v-model="radio" size="medium">
+      <el-radio-group class="check" @change="changeLayer" v-model="radio" size="medium">
         <div class="hpa">hpa</div>
-        <el-radio-button @click="pointApi(nowAirport, '800h')" class="hpa" label="800"></el-radio-button>
-        <el-radio-button class="hpa" label="850"></el-radio-button>
-        <el-radio-button class="hpa" label="900"></el-radio-button>
-        <el-radio-button class="hpa" label="925"></el-radio-button>
-        <el-radio-button class="hpa" label="950"></el-radio-button>
-        <el-radio-button class="hpa" label="1000"></el-radio-button>
+        <el-radio-button class="hpa" label="800h">800</el-radio-button>
+        <el-radio-button class="hpa" label="850h">850</el-radio-button>
+        <el-radio-button class="hpa" label="900h">900</el-radio-button>
+        <el-radio-button class="hpa" label="925h">925</el-radio-button>
+        <el-radio-button class="hpa" label="950h">950</el-radio-button>
+        <el-radio-button class="hpa" label="1000h">1000</el-radio-button>
       </el-radio-group>
     </div>
   </div>
@@ -75,12 +75,12 @@ export default {
     return {
       show: null,
       tabPosition: 'left',
-      radio: '1000',
+      radio: '1000h',
 
     }
   },
   computed: {
-    ...mapState(['nowAirport', 'temp', 'time', 'hours', 'dewpoint', 'rh', 'gh', 'wind_s', 'wind_d']),
+    ...mapState(['nowAirport', 'temp', 'time1', 'time', 'hours', 'dewpoint', 'rh', 'gh', 'wind_s', 'wind_d']),
 
   },
   created () {
@@ -115,6 +115,10 @@ export default {
       // 基于准备好的dom，初始化echarts实例
 
     },
+    async changeLayer (hpa) {
+      await this.$store.commit('pointApi', hpa)
+      console.log(33333333333333333333)
+    }
 
 
 
@@ -165,7 +169,7 @@ table {
 #hpa .check {
   padding: 10px 2px 10px 2px;
   display: flex;
-  margin-left: -35px;
+  margin-left: -34px;
   width: 34px;
   height: 280px;
   background: linear-gradient(360deg, #4a95bb, #52ab80, transparent);
@@ -192,6 +196,7 @@ table {
 #temp1,
 #temp2 {
   border: 0px;
+  height: 20px;
 }
 .date {
   font-size: 14px;
@@ -223,7 +228,7 @@ table > tr > td {
 
 #head :nth-child(2),
 #head :nth-child(6) {
-  padding: 33px 7px 7px 7px;
+  padding: 29px 7px 7px 7px;
 }
 .hpa {
   border-bottom: 1px solid #f5f7fa;
