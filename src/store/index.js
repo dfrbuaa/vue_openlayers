@@ -16,6 +16,7 @@ export default new Vuex.Store({
     dewpoint: [],
     rh: [],
     gh: [],
+    gust: [],
     wind_s: [],
     wind_d: []
 
@@ -31,6 +32,7 @@ export default new Vuex.Store({
 
 
     async pointApi (state, hpa) {
+      state.gh = [];
       const res = await axios({
         method: 'post',
         url: ' https://api.windy.com/api/point-forecast/v2',
@@ -38,7 +40,7 @@ export default new Vuex.Store({
           "lat": parseFloat(state.nowAirport.lat),
           "lon": parseFloat(state.nowAirport.lng),
           "model": "gfs",
-          "parameters": ["wind", "temp", "dewpoint", "rh", "gh"],
+          "parameters": ["wind", "temp", "dewpoint", "rh", "gh", "windGust"],
           "levels": [hpa],
           "key": "fd4RLs33Bb3Mg3qginrlRtYVrhZ0otLi"
 
@@ -113,13 +115,26 @@ export default new Vuex.Store({
       state.rh = rh;
 
       //gh位势高度
-      let g = res.data[`gh-${hpa}`]
-      let gh = []
-      for (let i = 0; i < g.length; i++) {
-        let j = g[i].toFixed(1);
-        gh.push(j)
+      let gh = res.data[`gh-${hpa}`]
+      state.gh = gh
+      if (gh[0]) {
+        state.gh.forEach((val, index) => {
+          state.gh[index] = val.toFixed(1)
+        })
+
       }
-      state.gh = gh;
+
+
+      //阵风
+
+      let gust = res.data[`gust-surface`]
+      state.gust = gust
+      if (gust[0]) {
+        state.gust.forEach((val, index) => {
+          state.gust[index] = val.toFixed(1)
+        })
+
+      }
 
       //风速
       let wind_u = res.data[`wind_u-${hpa}`]

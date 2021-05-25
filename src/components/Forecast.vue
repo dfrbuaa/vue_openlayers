@@ -23,8 +23,11 @@
           <tr>
             <td colspan="1" class="rh" v-for="(item, i) in rh" :key="i">{{ rh[i] }}</td>
           </tr>
-          <tr>
+          <tr v-show="show">
             <td colspan="1" class="gh" v-for="(item, i) in gh" :key="i">{{ gh[i] }}</td>
+          </tr>
+          <tr v-show="!show">
+            <td colspan="1" class="gh" v-for="(item, i) in gust" :key="i">{{ gust[i] }}</td>
           </tr>
           <tr>
             <td colspan="1" id="temp2" height="25px" v-for="(item, i) in temp" :key="i"></td>
@@ -42,11 +45,12 @@
     </div>
     <div id="head" class="ll">
       <div>时间 <i class="el-icon-time"></i></div>
-      <div>温度<i>℃</i></div>
+      <div style="padding: 29px 7px 7px 7px">温度<i>℃</i></div>
       <div>露点温度<i>℃</i></div>
       <div>湿度<i>%</i></div>
-      <div>位势高度<i>m</i></div>
-      <div>风速<i>m/s</i></div>
+      <div v-show="show">位势高度<i>m</i></div>
+      <div v-show="!show">阵风<i>m/s</i></div>
+      <div style="padding: 29px 7px 7px 7px">风速<i>m/s</i></div>
       <div>风向<i class="el-icon-s-flag"></i></div>
     </div>
     <div id="hpa" class="ll">
@@ -58,6 +62,7 @@
         <el-radio-button class="hpa" label="925h">925</el-radio-button>
         <el-radio-button class="hpa" label="950h">950</el-radio-button>
         <el-radio-button class="hpa" label="1000h">1000</el-radio-button>
+        <el-radio-button class="hpa" label="surface">地面</el-radio-button>
       </el-radio-group>
     </div>
   </div>
@@ -75,12 +80,12 @@ export default {
     return {
       show: null,
       tabPosition: 'left',
-      radio: '1000h',
+      radio: 'surface',
 
     }
   },
   computed: {
-    ...mapState(['nowAirport', 'temp', 'time1', 'time', 'hours', 'dewpoint', 'rh', 'gh', 'wind_s', 'wind_d']),
+    ...mapState(['nowAirport', 'temp', 'time1', 'time', 'hours', 'dewpoint', 'rh', 'gh', 'gust', 'wind_s', 'wind_d']),
 
   },
   created () {
@@ -116,6 +121,11 @@ export default {
 
     },
     async changeLayer (hpa) {
+      if (hpa === "surface") {
+        this.show = false;
+      } else {
+        this.show = true;
+      }
       await this.$store.commit('pointApi', hpa)
       console.log(33333333333333333333)
     }
@@ -226,13 +236,13 @@ table > tr > td {
   box-sizing: border-box;
 }
 
-#head :nth-child(2),
-#head :nth-child(6) {
+/* #head :nth-child(2),
+# {
   padding: 29px 7px 7px 7px;
-}
+} */
 .hpa {
   border-bottom: 1px solid #f5f7fa;
-  height: 38px;
+  height: 30px;
 }
 /deep/.el-radio-button__inner {
   white-space: nowrap;
@@ -260,11 +270,12 @@ table > tr > td {
 /deep/.el-radio-button__orig-radio:checked + .el-radio-button__inner {
   color: #007dff;
   background-color: #ffffff;
-  border: 2px solid rgb(223 228 237);
+  border: 1px solid rgb(223 228 237);
   box-shadow: 0 0 0 0 #ffffff;
   right: 3px;
   width: 34px;
-  top: -1px;
+  top: -3px;
+  height: 34px;
 }
 /deep/.el-radio-button:last-child .el-radio-button__inner {
   border-radius: 0;
