@@ -70,7 +70,8 @@
 
 <script>
 import * as echarts from 'echarts';
-import { mapState, mapGetters } from 'vuex'
+import { mapState, mapActions } from 'vuex'
+
 export default {
 
   data () {
@@ -96,7 +97,7 @@ export default {
     console.log(this.radio)
   },
   methods: {
-
+    ...mapActions(['postData']),
     add_echarts (id) {
 
       var myChart = echarts.init(document.getElementById(id));
@@ -154,7 +155,7 @@ export default {
       } else {
         this.$store.commit('changeShow', true)
       }
-      await this.$store.commit('pointApi', hpa)
+      await this.postData(hpa, this.nowAirport.lat, this.nowAirport.lon)
       await console.log(33333333333)
 
 

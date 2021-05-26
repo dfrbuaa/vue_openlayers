@@ -41,30 +41,14 @@ export default new Vuex.Store({
       state.show = msg;
     },
 
-    async pointApi (state, hpa) {
+    pointApi (state, res) {
 
-      const res = await axios({
-        method: 'post',
-        url: ' https://api.windy.com/api/point-forecast/v2',
-        data: {
-          "lat": parseFloat(state.nowAirport.lat),
-          "lon": parseFloat(state.nowAirport.lng),
-          "model": "gfs",
-          "parameters": ["wind", "temp", "dewpoint", "rh", "gh", "windGust"],
-          "levels": [hpa],
-          "key": "fd4RLs33Bb3Mg3qginrlRtYVrhZ0otLi"
-
-        },
-        header: {
-          'Content-Type': 'application/json'
-        }
-      })
 
 
 
       console.log('0000000000000000000000')
 
-      console.log(res.data)
+      console.log(res)
 
       //日期小时
       let ts = res.data['ts']
@@ -99,9 +83,11 @@ export default new Vuex.Store({
 
 
       //温度
-      let temp = res.data[`temp-${hpa}`];
-      state.temp = JSON.parse(JSON.stringify(temp));
+      let temp = res.data[`temp-${res.hpa}`];
+      console.log(hpa)
+      state.temp = temp;
       state.temp_tu = JSON.parse(JSON.stringify(temp));
+
       state.temp.forEach((val, index,) => {
         state.temp[index] = Math.round(val - 273.15) + '°'
 
@@ -113,7 +99,7 @@ export default new Vuex.Store({
 
 
       // 露点温度
-      let dewpoint = res.data[`dewpoint-${hpa}`];
+      let dewpoint = res.data[`dewpoint-${res.hpa}`];
       state.dewpoint = JSON.parse(JSON.stringify(dewpoint));
       state.dewpoint_tu = JSON.parse(JSON.stringify(dewpoint));
       state.dewpoint.forEach((val, index,) => {
@@ -126,7 +112,7 @@ export default new Vuex.Store({
       })
 
       //rh空气相对湿度
-      let r = res.data[`rh-${hpa}`]
+      let r = res.data[`rh-${res.hpa}`]
       let rh = []
       for (let i = 0; i < r.length; i++) {
         let j = r[i].toFixed(1);
@@ -135,7 +121,7 @@ export default new Vuex.Store({
       state.rh = rh;
 
       //gh位势高度
-      let gh = res.data[`gh-${hpa}`]
+      let gh = res.data[`gh-${res.hpa}`]
       state.gh = gh
       if (gh[0]) {
         state.gh.forEach((val, index) => {
@@ -157,9 +143,9 @@ export default new Vuex.Store({
       }
 
       //风速
-      let wind_u = res.data[`wind_u-${hpa}`]
+      let wind_u = res.data[`wind_u-${res.hpa}`]
       // console.log(wind_u)
-      let wind_v = res.data[`wind_v-${hpa}`]
+      let wind_v = res.data[`wind_v-${res.hpa}`]
       // console.log(wind_v)
       let wind_s = []
       for (let i = 0; i < wind_u.length; i++) {
@@ -235,8 +221,26 @@ export default new Vuex.Store({
 
   actions: {
 
-    postDate ({ commit }, params) {
-      commit("pointApi", params)
+    async postData ({ commit, }, hpa, lat, lng) {
+      const res = await axios({
+        method: 'post',
+        url: ' https://api.windy.com/api/point-forecast/v2',
+        data: {
+          "lat": parseFloat(lat),
+          "lon": parseFloat(lng),
+          "model": "gfs",
+          "parameters": ["wind", "temp", "dewpoint", "rh", "gh", "windGust"],
+          "levels": [hpa],
+          "key": "fd4RLs33Bb3Mg3qginrlRtYVrhZ0otLi"
+
+        },
+        header: {
+          'Content-Type': 'application/json'
+        }
+      })
+      res.hpa = hpa
+
+      commit('pointApi', res)
     }
 
   },

@@ -80,7 +80,7 @@ export default {
     BottomMenuData: bottom_menu_data
   },
   computed: {
-    ...mapActions(['postData'])
+
   },
   data () {
 
@@ -199,6 +199,7 @@ export default {
   },
 
   methods: {
+    ...mapActions(['postData']),
     show_ty () {
       this.removePoints()
       this.addPoints(this.point_ty)
@@ -341,7 +342,10 @@ export default {
             this.$store.commit('changeAirport', airport)
 
 
-            await this.$store.commit('pointApi', 'surface')
+
+            await this.postData('surface', lat, lng)
+
+
 
             this.$store.commit('changeShow', false)
             this.$store.commit('changeHpa', 'surface')
@@ -351,6 +355,7 @@ export default {
             // this.$store.dispatch('postData', '1000h')
             // await this.pointApi(this.$store.state.nowAirport, '1000h')
             console.log(this.$store.state.nowAirport)
+
 
 
 
