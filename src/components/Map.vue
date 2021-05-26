@@ -327,7 +327,7 @@ export default {
             zIndexOffset: -999
 
           }).on('click', async (e) => {
-
+            this.show_menu = true
 
             console.log(e)
 
@@ -350,7 +350,7 @@ export default {
             this.$store.commit('changeShow', false)
             this.$store.commit('changeHpa', 'surface')
             // await this.$store.commit('pointApi1',)
-            this.show_menu = true
+
             console.log('222222222222222222222222')
             // this.$store.dispatch('postData', '1000h')
             // await this.pointApi(this.$store.state.nowAirport, '1000h')

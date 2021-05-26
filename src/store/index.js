@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
-
+import * as echarts from 'echarts';
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -211,6 +211,96 @@ export default new Vuex.Store({
       console.log('pppppppppppppppppp')
       let data = res.data.showapi_res_body;
       console.log(data)
+    }
+    ,
+    addEcharts (state, id) {
+      var myChart = echarts.init(document.getElementById(id));
+      // 绘制图表
+      let option = {}
+      let option2 = {
+        xAxis: {
+          show: false,
+          type: 'category',
+          data: state.hours,
+          interval: 16
+        },
+        yAxis: {
+          type: 'value',
+          min: Math.min(state.temp_tu),
+          max: Math.max(state.temp_tu),
+
+        },
+        axisTick: {
+          show: true,    // 是否显示坐标轴刻度
+          inside: true,     // 坐标轴刻度是否朝内，默认朝外
+          length: 5,    // 坐标轴刻度的长度
+          lineStyle: {
+            color: '#FFF',     // 刻度线的颜色
+            width: 50,    // 坐标轴刻度线宽
+            type: 'solid',     // 坐标轴线线的类型（'solid'，实线类型；'dashed'，虚线类型；'dotted',点状类型）
+          },
+        },
+        grid: {
+          x: 0,
+          x2: 0,
+          y: 1,
+          y2: 1
+
+
+        },
+        series: [{
+          name: '风速',
+          type: 'line',
+          data: state.temp_tu
+        },
+        ]
+
+      };
+      let option1 = {
+        xAxis: {
+          show: false,
+          type: 'category',
+          data: state.hours,
+          interval: 16
+        },
+        yAxis: {
+          type: 'value',
+          min: Math.min(state.wind_s),
+          max: Math.max(state.wind_s),
+
+        },
+        axisTick: {
+          show: true,    // 是否显示坐标轴刻度
+          inside: true,     // 坐标轴刻度是否朝内，默认朝外
+          length: 5,    // 坐标轴刻度的长度
+          lineStyle: {
+            color: '#FFF',     // 刻度线的颜色
+            width: 50,    // 坐标轴刻度线宽
+            type: 'solid',     // 坐标轴线线的类型（'solid'，实线类型；'dashed'，虚线类型；'dotted',点状类型）
+          },
+        },
+        grid: {
+          x: 0,
+          x2: 0,
+          y: 1,
+          y2: 1
+
+
+        },
+        series: [{
+
+          type: 'line',
+          data: state.wind_s
+        },
+        ]
+
+      };
+      if (id === 'echarts1') {
+        option = option1
+      } else {
+        option = option2
+      }
+      myChart.setOption(option)
     }
 
   },

@@ -12,7 +12,7 @@
             <td colspan="1" class="hour" v-for="(item, i) in hours" :key="i">{{ hours[i] }}</td>
           </tr>
           <tr>
-            <td colspan="80" id="temp1" height="25px"><div style="width: 4560px" id="echarts"></div></td>
+            <td colspan="80" id="temp1"><div style="width: 4560px" id="echarts1"></div></td>
           </tr>
           <tr>
             <td colspan="1" class="temp" v-for="(item, i) in temp" :key="i">{{ temp[i] }}</td>
@@ -30,7 +30,7 @@
             <td colspan="1" class="gh" v-for="(item, i) in gust" :key="i">{{ gust[i] }}</td>
           </tr>
           <tr>
-            <td colspan="1" id="temp2" height="25px" v-for="(item, i) in temp" :key="i"></td>
+            <td colspan="80" id="temp2"><div style="width: 4560px" id="echarts2"></div></td>
           </tr>
           <tr>
             <td colspan="1" class="wind_s" v-for="(item, i) in wind_s" :key="i">{{ wind_s[i] }}</td>
@@ -45,12 +45,12 @@
     </div>
     <div id="head" class="ll">
       <div>时间 <i class="el-icon-time"></i></div>
-      <div style="padding: 29px 7px 7px 7px">温度<i>℃</i></div>
+      <div style="padding: 34px 4px 4px 4px">温度<i>℃</i></div>
       <div>露点温度<i>℃</i></div>
       <div>湿度<i>%</i></div>
       <div v-show="show">位势高度<i>m</i></div>
       <div v-show="!show">阵风<i>m/s</i></div>
-      <div style="padding: 29px 7px 7px 7px">风速<i>m/s</i></div>
+      <div style="padding: 34px 4px 4px 4px">风速<i>m/s</i></div>
       <div>风向<i class="el-icon-s-flag"></i></div>
     </div>
     <div id="hpa" class="ll">
@@ -94,61 +94,25 @@ export default {
   mounted () {
 
     console.log('ttttttttttttttttttttt')
+
     console.log(this.radio)
+
+
   },
   methods: {
     ...mapActions(['postData']),
-    add_echarts (id) {
-
-      var myChart = echarts.init(document.getElementById(id));
-      // 绘制图表
-
-      myChart.setOption({
-        xAxis: {
-          show: false,
-          type: 'category',
-          data: this.hours,
-          interval: 16
-        },
-        yAxis: {
-          type: 'value',
-          min: Math.min(this.temp_tu),
-          max: Math.max(this.temp_tu),
-
-        },
-        axisTick: {
-          show: true,    // 是否显示坐标轴刻度
-          inside: true,     // 坐标轴刻度是否朝内，默认朝外
-          length: 5,    // 坐标轴刻度的长度
-          lineStyle: {
-            color: '#FFF',     // 刻度线的颜色
-            width: 50,    // 坐标轴刻度线宽
-            type: 'solid',     // 坐标轴线线的类型（'solid'，实线类型；'dashed'，虚线类型；'dotted',点状类型）
-          },
-        },
-        grid: {
-          x: 0,
-          x2: 0,
-          y: 1,
-          y2: 1
 
 
-        },
-        series: [{
-          name: '温度',
-          type: 'line',
-          data: this.temp_tu
-        },
-        ]
-      });
 
-      // 基于准备好的dom，初始化echarts实例
 
-    },
+    // 基于准备好的dom，初始化echarts实例
+
+
     async changeLayer (hpa) {
 
       this.$store.commit('changeHpa', hpa)
-      this.add_echarts('echarts')
+      this.$store.commit('addEcharts', 'echarts1')
+      this.$store.commit('addEcharts', 'echarts2')
 
       if (this.hpa === "surface") {
         this.$store.commit('changeShow', false)
@@ -250,7 +214,7 @@ table {
 
 table > tr > td {
   border-left: 1px solid rgb(223 228 237);
-  padding: 1px 7px 7px 7px;
+  padding: 1px 4px 4px 4px;
   width: 49px;
   box-sizing: border-box;
 }
@@ -267,7 +231,7 @@ table > tr > td {
 #head > div {
   font-size: 13px;
   width: 80px;
-  padding: 1px 7px 7px 7px;
+  padding: 1px 4px 4px 4px;
   text-align: right;
   box-sizing: border-box;
 }
@@ -321,11 +285,12 @@ table > tr > td {
   font-size: 15px;
 }
 
-#echarts {
+#echarts1,
+#echarts2 {
   position: relative;
   top: 0px;
 
-  height: 25px;
+  height: 30px;
   z-index: 99999;
   background: transparent;
   padding: 0;

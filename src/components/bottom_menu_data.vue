@@ -1,6 +1,6 @@
 <template>
   <div id="menu">
-    <el-tabs :tab-position="tabPosition" type="border-card" style="height: 400px">
+    <el-tabs @tab-click="addEcharts" :tab-position="tabPosition" type="border-card" style="height: 400px">
       <el-tab-pane>
         <span slot="label"><i class="el-icon-s-order"></i> 机场</span>
         <div id="ty" v-if="this.$store.state.nowAirport[0].demo === '2'" style="background: rgb(247 227 216)">
@@ -64,9 +64,11 @@
           </div>
         </div>
       </el-tab-pane>
+
       <el-tab-pane>
         <span slot="label"><i class="el-icon-s-data"></i> 实况</span>
       </el-tab-pane>
+
       <el-tab-pane>
         <!-- @click="add()"  -->
         <span slot="label"><i class="el-icon-s-marketing"></i> 预测</span>
@@ -97,9 +99,13 @@ export default {
 
   },
   methods: {
-    add () {
-      this.$refs.forecast.add_echarts('echarts')
-    },
+
+    addEcharts () {
+      this.$store.commit('addEcharts', 'echarts1')
+      this.$store.commit('addEcharts', 'echarts2')
+
+      console.log('eeeeeeecccccccccccc')
+    }
 
   }
 
@@ -153,10 +159,6 @@ li {
   border-radius: 8px;
 }
 
-#echarts {
-  width: 1000px;
-  height: 300px;
-}
 #ty,
 #ys {
   width: 100%;
