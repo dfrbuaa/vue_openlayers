@@ -13,15 +13,23 @@ export default new Vuex.Store({
     col: null,
     hours: [],
     temp: [],
+    temp_tu: [],
     dewpoint: [],
+    dewpoint_tu: [],
     rh: [],
     gh: [],
     gust: [],
     wind_s: [],
-    wind_d: []
+    wind_d: [],
+    width: null,
+    hpa: null,
+    show: null,
 
   },
   mutations: {
+    changeHpa (state, msg) {
+      state.hpa = msg
+    },
     changePoint (state, msg) {
       state.nowPoint = msg;
     },
@@ -29,10 +37,12 @@ export default new Vuex.Store({
     changeAirport (state, msg) {
       state.nowAirport = msg;
     },
-
+    changeShow (state, msg) {
+      state.show = msg;
+    },
 
     async pointApi (state, hpa) {
-      state.gh = [];
+
       const res = await axios({
         method: 'post',
         url: ' https://api.windy.com/api/point-forecast/v2',
@@ -49,9 +59,9 @@ export default new Vuex.Store({
           'Content-Type': 'application/json'
         }
       })
-      if (res.status !== 200) {
-        return this.$message.error('获取表失败！')
-      }
+
+
+
       console.log('0000000000000000000000')
 
       console.log(res.data)
@@ -90,18 +100,28 @@ export default new Vuex.Store({
 
       //温度
       let temp = res.data[`temp-${hpa}`];
-      state.temp = temp;
+      state.temp = JSON.parse(JSON.stringify(temp));
+      state.temp_tu = JSON.parse(JSON.stringify(temp));
       state.temp.forEach((val, index,) => {
         state.temp[index] = Math.round(val - 273.15) + '°'
+
+      })
+      state.temp_tu.forEach((val, index,) => {
+        state.temp_tu[index] = parseFloat((val - 273.15).toFixed(1))
 
       })
 
 
       // 露点温度
       let dewpoint = res.data[`dewpoint-${hpa}`];
-      state.dewpoint = dewpoint;
+      state.dewpoint = JSON.parse(JSON.stringify(dewpoint));
+      state.dewpoint_tu = JSON.parse(JSON.stringify(dewpoint));
       state.dewpoint.forEach((val, index,) => {
         state.dewpoint[index] = Math.round(val - 273.15) + '°'
+
+      })
+      state.dewpoint_tu.forEach((val, index,) => {
+        state.dewpoint_tu[index] = parseFloat((val - 273.15).toFixed(1))
 
       })
 
@@ -129,7 +149,7 @@ export default new Vuex.Store({
 
       let gust = res.data[`gust-surface`]
       state.gust = gust
-      if (gust[0]) {
+      if (gust) {
         state.gust.forEach((val, index) => {
           state.gust[index] = val.toFixed(1)
         })

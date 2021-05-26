@@ -330,7 +330,7 @@ export default {
 
             console.log(e)
 
-            this.show_menu = true
+
             this.map.setView(e.latlng)
             this.$store.commit('changePoint', e.latlng);
             console.log(this.$store.state.nowPoint)
@@ -339,13 +339,26 @@ export default {
             let airport = Enumerable.From(this.point_ty.concat(this.point_ys)).Where(`x => x.lat === ${lat} && x.lon===${lng}`).ToArray();
             console.log(1111111111111111111111)
             this.$store.commit('changeAirport', airport)
-            await this.$store.commit('pointApi', 'surface')
-            await this.$store.commit('pointApi1',)
 
+
+            await this.$store.commit('pointApi', 'surface')
+
+            this.$store.commit('changeShow', false)
+            this.$store.commit('changeHpa', 'surface')
+            // await this.$store.commit('pointApi1',)
+            this.show_menu = true
             console.log('222222222222222222222222')
             // this.$store.dispatch('postData', '1000h')
             // await this.pointApi(this.$store.state.nowAirport, '1000h')
             console.log(this.$store.state.nowAirport)
+
+
+
+
+
+
+
+
 
           })
 
@@ -389,6 +402,10 @@ export default {
   }
 
 }
+
+
+
+
 
 
 </script >
