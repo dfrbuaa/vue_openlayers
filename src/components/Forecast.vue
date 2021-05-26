@@ -12,7 +12,7 @@
             <td colspan="1" class="hour" v-for="(item, i) in hours" :key="i">{{ hours[i] }}</td>
           </tr>
           <tr>
-            <td colspan="1" id="temp1" height="25px" v-for="(item, i) in temp" :key="i"></td>
+            <td colspan="80" id="temp1" height="25px"><div style="width: 4560px" id="echarts"></div></td>
           </tr>
           <tr>
             <td colspan="1" class="temp" v-for="(item, i) in temp" :key="i">{{ temp[i] }}</td>
@@ -66,8 +66,6 @@
       </el-radio-group>
     </div>
   </div>
-
-  <!-- <div id="echarts"></div> -->
 </template>
 
 <script>
@@ -78,14 +76,15 @@ export default {
   data () {
 
     return {
-      show: null,
+
       tabPosition: 'left',
       radio: 'surface',
+
 
     }
   },
   computed: {
-    ...mapState(['nowAirport', 'temp', 'time1', 'time', 'hours', 'dewpoint', 'rh', 'gh', 'gust', 'wind_s', 'wind_d']),
+    ...mapState(['nowAirport', 'temp', 'temp_tu', 'time1', 'time', 'hours', 'dewpoint', 'dewpoint_tu', 'rh', 'gh', 'gust', 'wind_s', 'wind_d', 'width', 'hpa', 'show']),
 
   },
   created () {
@@ -93,6 +92,8 @@ export default {
   },
   mounted () {
 
+    console.log('ttttttttttttttttttttt')
+    console.log(this.radio)
   },
   methods: {
 
@@ -102,47 +103,79 @@ export default {
       // 绘制图表
 
       myChart.setOption({
-        title: {
-          text: 'ECharts 入门示例'
-        },
-        tooltip: {},
         xAxis: {
-          data: ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子']
+          show: false,
+          type: 'category',
+          data: this.hours,
+          interval: 16
         },
-        yAxis: {},
+        yAxis: {
+          type: 'value',
+          min: Math.min(this.temp_tu),
+          max: Math.max(this.temp_tu),
+
+        },
+        axisTick: {
+          show: true,    // 是否显示坐标轴刻度
+          inside: true,     // 坐标轴刻度是否朝内，默认朝外
+          length: 5,    // 坐标轴刻度的长度
+          lineStyle: {
+            color: '#FFF',     // 刻度线的颜色
+            width: 50,    // 坐标轴刻度线宽
+            type: 'solid',     // 坐标轴线线的类型（'solid'，实线类型；'dashed'，虚线类型；'dotted',点状类型）
+          },
+        },
+        grid: {
+          x: 0,
+          x2: 0,
+          y: 1,
+          y2: 1
+
+
+        },
         series: [{
-          name: '销量',
-          type: 'bar',
-          data: [5, 20, 36, 10, 10, 20]
-        }]
+          name: '温度',
+          type: 'line',
+          data: this.temp_tu
+        },
+        ]
       });
 
       // 基于准备好的dom，初始化echarts实例
 
     },
     async changeLayer (hpa) {
-      if (hpa === "surface") {
-        this.show = false;
+
+      this.$store.commit('changeHpa', hpa)
+      this.add_echarts('echarts')
+
+      if (this.hpa === "surface") {
+        this.$store.commit('changeShow', false)
       } else {
-        this.show = true;
+        this.$store.commit('changeShow', true)
       }
       await this.$store.commit('pointApi', hpa)
-      console.log(33333333333333333333)
-    }
+      await console.log(33333333333)
 
 
-
-
-
-
-
-
-
-
+    },
 
 
   }
+
+
+
+
+
+
+
+
+
+
+
+
 }
+
 
 </script>
 
@@ -217,6 +250,8 @@ table {
 table > tr > td {
   border-left: 1px solid rgb(223 228 237);
   padding: 1px 7px 7px 7px;
+  width: 49px;
+  box-sizing: border-box;
 }
 #head {
   margin-left: -100%;
@@ -243,6 +278,7 @@ table > tr > td {
 .hpa {
   border-bottom: 1px solid #f5f7fa;
   height: 30px;
+  z-index: 999999;
 }
 /deep/.el-radio-button__inner {
   white-space: nowrap;
@@ -282,5 +318,15 @@ table > tr > td {
 }
 /deep/.el-icon-position:before {
   font-size: 15px;
+}
+
+#echarts {
+  position: relative;
+  top: 0px;
+
+  height: 25px;
+  z-index: 99999;
+  background: transparent;
+  padding: 0;
 }
 </style>
