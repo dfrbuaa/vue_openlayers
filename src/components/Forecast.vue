@@ -127,7 +127,13 @@ export default {
       } else {
         this.$store.commit('changeShow', true)
       }
-      await this.postData(hpa, this.nowAirport.lat, this.nowAirport.lon)
+      let params = {
+        hpa: hpa,
+        lat: this.nowAirport[0].lat,
+        lng: this.nowAirport[0].lon
+      }
+
+      await this.postData(params)
       await console.log(33333333333)
 
 

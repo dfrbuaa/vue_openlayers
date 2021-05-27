@@ -180,34 +180,8 @@ export default new Vuex.Store({
 
 
     },
-    async pointApi1 (state) {
-      const res = await axios({
-        method: 'post',
-        url: 'http://route.showapi.com/9-5',
-        // dataType: 'json',
-        data: {
+    pointApi1 (state, res) {
 
-          "showapi_appid": '644698', //这里需要改成自己的appid
-          "showapi_sign": '915e1809e7da40d18c1c602f149029ab',  //这里需要改成自己的应用的密钥secret
-          "from": "5",
-          "lng": "116.2278",
-          "lat": "40.242266",
-
-        },
-        transformRequest: [
-          function (data) {
-            let ret = ''
-            for (let it in data) {
-              ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
-            }
-            ret = ret.substring(0, ret.lastIndexOf('&'));
-            return ret
-          }
-        ],
-        header: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
-      })
       console.log('pppppppppppppppppp')
       let data = res.data.showapi_res_body;
       console.log(data)
@@ -328,16 +302,19 @@ export default new Vuex.Store({
 
   actions: {
 
-    async postData ({ commit, }, hpa, lat, lng) {
+    async postData ({ commit, }, params) {
+      console.log(params.hpa)
+      console.log(parseFloat(params.lat))
+      console.log(parseFloat(params.lng))
       const res = await axios({
         method: 'post',
         url: ' https://api.windy.com/api/point-forecast/v2',
         data: {
-          "lat": parseFloat(lat),
-          "lon": parseFloat(lng),
+          "lat": parseFloat(params.lat),
+          "lon": parseFloat(params.lng),
           "model": "gfs",
           "parameters": ["wind", "temp", "dewpoint", "rh", "gh", "windGust"],
-          "levels": [hpa],
+          "levels": [params.hpa],
           "key": "fd4RLs33Bb3Mg3qginrlRtYVrhZ0otLi"
 
         },
@@ -345,9 +322,42 @@ export default new Vuex.Store({
           'Content-Type': 'application/json'
         }
       })
-      res.hpa = hpa
+      res.hpa = params.hpa
 
       commit('pointApi', res)
+    },
+    async postData1 ({ commit, }, latlng) {
+
+
+      const res = await axios({
+        method: 'post',
+        url: 'http://route.showapi.com/9-5',
+        // dataType: 'json',
+        data: {
+
+          "showapi_appid": '644698', //这里需要改成自己的appid
+          "showapi_sign": '915e1809e7da40d18c1c602f149029ab',  //这里需要改成自己的应用的密钥secret
+          "from": 5,
+
+          "lat": parseFloat(latlng.lat),
+          "lng": parseFloat(latlng.lng)
+
+        },
+        transformRequest: [
+          function (data) {
+            let ret = ''
+            for (let it in data) {
+              ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+            }
+            ret = ret.substring(0, ret.lastIndexOf('&'));
+            return ret
+          }
+        ],
+        header: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      })
+      commit('pointApi1', res)
     }
 
   },

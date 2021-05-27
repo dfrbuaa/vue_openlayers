@@ -213,7 +213,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(['postData']),
+    ...mapActions(['postData', 'postData1']),
     show_ty () {
       this.removePoints()
       this.addPoints(this.point_ty)
@@ -356,8 +356,13 @@ export default {
             this.$store.commit('changeAirport', airport)
 
 
-
-            await this.postData('surface', lat, lng)
+            let params = {
+              hpa: 'surface',
+              lat: lat,
+              lng: lng
+            }
+            await this.postData(params)
+            await this.postData1(e.latlng)
 
 
 
