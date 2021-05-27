@@ -22,7 +22,7 @@ export default new Vuex.Store({
     wind_s: [],
     wind_d: [],
     width: null,
-    hpa: null,
+    hpa: 'surface',
     show: null,
 
   },

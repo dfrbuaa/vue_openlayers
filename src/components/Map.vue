@@ -357,7 +357,7 @@ export default {
 
 
             let params = {
-              hpa: 'surface',
+              hpa: this.$store.state.hpa,
               lat: lat,
               lng: lng
             }
@@ -365,9 +365,12 @@ export default {
             await this.postData1(e.latlng)
 
 
+            if (this.$store.state.hpa === "surface") {
+              this.$store.commit('changeShow', false)
+            } else {
+              this.$store.commit('changeShow', true)
+            }
 
-            this.$store.commit('changeShow', false)
-            this.$store.commit('changeHpa', 'surface')
             // await this.$store.commit('pointApi1',)
 
             console.log('222222222222222222222222')
