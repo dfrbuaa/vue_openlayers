@@ -239,7 +239,9 @@ export default new Vuex.Store({
             width: 50,    // 坐标轴刻度线宽
             type: 'solid',     // 坐标轴线线的类型（'solid'，实线类型；'dashed'，虚线类型；'dotted',点状类型）
           },
+
         },
+
         grid: {
           x: 0,
           x2: 0,
@@ -250,8 +252,23 @@ export default new Vuex.Store({
         },
         series: [{
           name: '风速',
+
           type: 'line',
-          data: state.temp_tu
+          data: state.temp_tu,
+          // smooth: true,//折点是圆弧状的
+          showSymbol: true,
+          // symbol: 'circle',     //折点设定为实心点
+          // symbolSize: 5,   //设定实心点的大小
+          hoverAnimation: false,
+
+          itemStyle: {
+            normal: {
+              color: '#fc8a0f', //折点颜色
+              lineStyle: {
+                color: '#ff9c35' //折线颜色
+              }
+            }
+          }
         },
         ]
 

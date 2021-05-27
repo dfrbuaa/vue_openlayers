@@ -1,6 +1,6 @@
 <template>
   <div id="menu">
-    <el-tabs @tab-click="addEcharts" :tab-position="tabPosition" type="border-card" style="height: 400px">
+    <el-tabs @tab-click="addEcharts" :tab-position="tabPosition" type="border-card" style="height: 318px">
       <el-tab-pane>
         <span slot="label"><i class="el-icon-s-order"></i> 机场</span>
         <div id="ty" v-if="this.$store.state.nowAirport[0].demo === '2'" style="background: rgb(247 227 216)">
@@ -147,7 +147,7 @@ li {
 }
 
 .airports::-webkit-scrollbar-track {
-  background-color: #e7eaf1;
+  background-color: #f5f7fa;
 }
 
 .airports::-webkit-scrollbar {
@@ -155,7 +155,7 @@ li {
 }
 
 .airports::-webkit-scrollbar-thumb {
-  background-color: #5c5c6566;
+  background-color: #dfe4ed;
   border-radius: 8px;
 }
 

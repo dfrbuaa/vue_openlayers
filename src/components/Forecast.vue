@@ -27,7 +27,15 @@
             <td colspan="1" class="gh" v-for="(item, i) in gh" :key="i">{{ gh[i] }}</td>
           </tr>
           <tr v-show="!show">
-            <td colspan="1" class="gh" v-for="(item, i) in gust" :key="i">{{ gust[i] }}</td>
+            <td
+              style="background: linear-gradient(to right, rgb(50, 230, 0), rgb(75, 226, 0), rgb(50, 230, 0))"
+              colspan="1"
+              class="gh"
+              v-for="(item, i) in gust"
+              :key="i"
+            >
+              {{ gust[i] }}
+            </td>
           </tr>
           <tr>
             <td colspan="80" id="temp2"><div style="width: 4560px" id="echarts2"></div></td>
@@ -45,12 +53,12 @@
     </div>
     <div id="head" class="ll">
       <div>时间 <i class="el-icon-time"></i></div>
-      <div style="padding: 34px 4px 4px 4px">温度<i>℃</i></div>
+      <div style="padding: 38px 4px 4px 4px">温度<i>℃</i></div>
       <div>露点温度<i>℃</i></div>
       <div>湿度<i>%</i></div>
       <div v-show="show">位势高度<i>m</i></div>
       <div v-show="!show">阵风<i>m/s</i></div>
-      <div style="padding: 34px 4px 4px 4px">风速<i>m/s</i></div>
+      <div style="padding: 38px 4px 4px 4px">风速<i>m/s</i></div>
       <div>风向<i class="el-icon-s-flag"></i></div>
     </div>
     <div id="hpa" class="ll">
@@ -146,7 +154,7 @@ export default {
 
 <style scoped >
 #ddd ::-webkit-scrollbar-track {
-  background-color: #e7eaf1;
+  background-color: #f5f7fa;
 }
 
 #ddd ::-webkit-scrollbar {
@@ -154,7 +162,7 @@ export default {
 }
 
 #ddd ::-webkit-scrollbar-thumb {
-  background-color: #5c5c6566;
+  background-color: #dfe4ed;
   border-radius: 8px;
 }
 #ddd {
@@ -290,7 +298,7 @@ table > tr > td {
   position: relative;
   top: 0px;
 
-  height: 30px;
+  height: 35px;
   z-index: 99999;
   background: transparent;
   padding: 0;

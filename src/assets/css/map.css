@@ -1,6 +1,6 @@
 #tuli {
   position: absolute;
-  z-index: 6;
+  z-index:1;
   font-size: 14px;
   color: #fff;
   width: 180px;
@@ -130,11 +130,11 @@
 }
 #bottom_menu {
   position: absolute;
-  width: 100%;
-  height: 300px;
-  z-index: 7;
-  bottom: 0;
-  background: rgb(253, 253, 253);
+    width: 100%;
+   
+    z-index: 1;
+    bottom:18px;
+    background: rgb(253, 253, 253);
   /* opacity: 0.9; */
 }
 .closing-x {
@@ -157,4 +157,16 @@
 
 .closing-x::before {
   content: '\e013';
+}
+
+#windy .progress-bar .progress-line {
+   
+    top: 0px !important
+   
+}
+#windy .timecode .box {
+   
+    top: 10px !important;
+    z-index: 1 !important;
+  
 }
