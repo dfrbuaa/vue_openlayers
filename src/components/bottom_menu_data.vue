@@ -67,6 +67,7 @@
 
       <el-tab-pane>
         <span slot="label"><i class="el-icon-s-data"></i> 实况</span>
+        <Live />
       </el-tab-pane>
 
       <el-tab-pane>
@@ -83,6 +84,7 @@
 
 
 import Forecast from './Forecast'
+import Live from './Live'
 export default {
 
 
@@ -93,7 +95,7 @@ export default {
     }
   },
   components: {
-    Forecast
+    Forecast, Live
   },
   mounted () {
 

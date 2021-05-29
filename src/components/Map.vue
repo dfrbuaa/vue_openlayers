@@ -430,11 +430,6 @@ export default {
 
 }
 
-
-
-
-
-
 </script >
 <style lang="css" >
 @import '../assets/css/map.css';

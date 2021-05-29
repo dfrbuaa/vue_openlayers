@@ -24,6 +24,11 @@ export default new Vuex.Store({
     width: null,
     hpa: 'surface',
     show: null,
+    hourDataList: null,
+    f1: null,
+    f2: null,
+    f3: null,
+    alarmList: [],
 
   },
   mutations: {
@@ -84,7 +89,7 @@ export default new Vuex.Store({
 
       //温度
       let temp = res.data[`temp-${res.hpa}`];
-      console.log(hpa)
+
       state.temp = temp;
       state.temp_tu = JSON.parse(JSON.stringify(temp));
 
@@ -185,6 +190,13 @@ export default new Vuex.Store({
       console.log('pppppppppppppppppp')
       let data = res.data.showapi_res_body;
       console.log(data)
+      state.hourDataList = data.hourDataList;
+      state.f1 = data.f1;
+      state.f2 = data.f2;
+      state.f3 = data.f3;
+      state.alarmList = data.alarmList.pop();
+
+
     }
     ,
     addEcharts (state, id) {
@@ -340,7 +352,9 @@ export default new Vuex.Store({
           "from": 5,
 
           "lat": parseFloat(latlng.lat),
-          "lng": parseFloat(latlng.lng)
+          "lng": parseFloat(latlng.lng),
+          "needHourData": 1,
+          "needAlarm": 1
 
         },
         transformRequest: [
