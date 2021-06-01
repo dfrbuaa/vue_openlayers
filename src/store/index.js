@@ -29,6 +29,7 @@ export default new Vuex.Store({
     f2: null,
     f3: null,
     alarmList: [],
+    alarmColor: null
 
   },
   mutations: {
@@ -190,11 +191,20 @@ export default new Vuex.Store({
       console.log('pppppppppppppppppp')
       let data = res.data.showapi_res_body;
       console.log(data)
-      state.hourDataList = data.hourDataList;
+      state.hourDataList = data.hourDataList.slice(-12);
       state.f1 = data.f1;
       state.f2 = data.f2;
       state.f3 = data.f3;
-      state.alarmList = data.alarmList.pop();
+      let list = []
+      for (let i = 0; i < data.alarmList.length; i++) {
+        list.push(data.alarmList[i].issueTime)
+      }
+      if (data.alarmList) {
+        state.alarmList = data.alarmList.pop();
+        if (state.alarmList.signalLevel === "黄色") state.alarmColor = 'yellow';
+        if (state.alarmList.signalLevel === "红色") state.alarmColor = 'red'
+        if (state.alarmList.signalLevel === "蓝色") state.alarmColor = '#66eeff'
+      }
 
 
     }

@@ -9,14 +9,58 @@
     <div class="ff" id="now">
       <div id="now1">
         <div></div>
-        <table style="width: 100%" class="myTable">
+        <table id="table1" style="width: 100%" class="myTable">
           <tr>
-            <td v-for="(item, i) in hourDataList.slice(-12)" :key="i">{{ item.temperature_time }}</td>
+            <td colspan="1" v-for="(item, i) in hourDataList" :key="i">{{ item.temperature_time }}</td>
+          </tr>
+
+          <tr>
+            <td colspan="1" v-for="(item, i) in hourDataList" :key="i"><img :src="item.weather_pic" alt="" /></td>
+          </tr>
+          <tr>
+            <td colspan="1" v-for="(item, i) in hourDataList" :key="i">{{ item.weather }}</td>
+          </tr>
+          <tr>
+            <td colspan="1" v-for="(item, i) in hourDataList" :key="i"></td>
+          </tr>
+          <tr>
+            <td colspan="1" v-for="(item, i) in hourDataList" :key="i">{{ item.temperature }}°</td>
+          </tr>
+
+          <tr>
+            <td colspan="1" v-for="(item, i) in hourDataList" :key="i">
+              {{ item.sd }}
+            </td>
+          </tr>
+          <tr>
+            <td colspan="1" v-for="(item, i) in hourDataList" :key="i">
+              {{ item.rain }}
+            </td>
+          </tr>
+          <tr>
+            <td colspan="1" v-for="(item, i) in hourDataList" :key="i">
+              {{ item.wind_power }}
+            </td>
+          </tr>
+          <tr>
+            <td colspan="1" v-for="(item, i) in hourDataList" :key="i">
+              {{ item.wind_direction }}
+            </td>
           </tr>
         </table>
       </div>
     </div>
-    <div id="head" class="ff"></div>
+    <div id="head" class="ff">
+      <div>时间 <i class="el-icon-time" /></div>
+      <div>天气 <i class="el-icon-time" /></div>
+      <div>温度℃</div>
+
+      <div>湿度<i>%</i></div>
+      <div>降水<i>mm</i></div>
+
+      <div>风力<i></i></div>
+      <div>风向<i class="el-icon-s-flag"></i></div>
+    </div>
     <div class="ff" id="right">
       <div id="f1" class="f">
         <div>{{ this.$store.state.time1 }}(今天)</div>
@@ -192,10 +236,11 @@
       <div id="issue">
         <div><i class="el-icon-message-solid"></i> 预警</div>
         <div id="issueContent" v-if="alarmList">
-          <div class="signal">{{ this.alarmList.signalLevel }}</div>
+          <div class="signal" :style="{ background: this.alarmColor }">{{ this.alarmList.signalLevel }}</div>
           <div class="issueTime">{{ this.alarmList.issueTime }}</div>
           <div class="content">{{ this.alarmList.issueContent }}</div>
         </div>
+        <div id="issueContent1" v-if="!alarmList">暂无</div>
       </div>
     </div>
   </div>
@@ -210,9 +255,10 @@ export default {
     }
   },
   computed: {
-    ...mapState(['nowAirport', 'hourDataList', 'f1', 'f2', 'f3', 'alarmList']),
+    ...mapState(['nowAirport', 'hourDataList', 'f1', 'f2', 'f3', 'alarmList', 'alarmColor']),
 
   }
+
 
 }
 </script>
@@ -226,7 +272,7 @@ export default {
   width: 100%;
 }
 #now1 {
-  background: rgb(182, 229, 238);
+  border-top: 1px solid rgb(223 228 237);
   height: 280px;
   margin: 0 900px 0 80px;
   min-width: 830px;
@@ -236,6 +282,11 @@ export default {
   width: 80px;
   background-color: rgb(245 247 250);
   border-right: 1px solid rgb(223 228 237);
+}
+#head > div {
+  text-align: right;
+
+  padding: 3px 4px 4px 4px;
 }
 #right {
   margin-left: -900px;
@@ -249,6 +300,10 @@ export default {
   border-right: 1px solid #dfe4ed;
   border-top: 1px solid #dfe4ed;
   box-sizing: border-box;
+}
+#right > div > :nth-child(1) {
+  background: #fff;
+  width: 200px;
 }
 #today {
   position: absolute;
@@ -304,6 +359,7 @@ div {
 .middle {
   height: 20px;
   width: 199px;
+  background: #fff;
 }
 .left > img {
   width: 60px;
@@ -321,7 +377,22 @@ table > tr > td {
 #issue {
   width: 300px !important;
 }
-#issueContent {
+#issueContent,
+#issueContent1 {
   padding: 0px 5px;
+  background: rgb(245 247 250);
+  height: 280px;
+}
+
+#table1 > tr > td > img {
+  width: 30px;
+}
+#table1 > tr > td {
+  text-align: center;
+  border-left: 1px solid rgb(223 228 237);
+  padding: 3px 4px 4px 4px;
+}
+#table1 > tr > :nth-child(1) {
+  border-left: 0px solid rgb(223 228 237) !important;
 }
 </style>
