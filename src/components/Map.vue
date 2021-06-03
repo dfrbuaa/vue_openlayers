@@ -20,7 +20,7 @@
         <span id="s4">432</span>
       </li>
     </div>
-
+    <div id="sou"><i class="el-icon-search"></i><input type="text" placeholder="机场名称/四字代码" /></div>
     <div id="bottom_menu" ref="bottom_menu_ref" v-show="show_menu">
       <div class="closing-x" @click="close_bottom_menu()"></div>
       <Bottom-Menu-Data></Bottom-Menu-Data>
@@ -213,7 +213,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(['postData', 'postData1']),
+    ...mapActions(['postData', 'postData1', 'postData2']),
     show_ty () {
       this.removePoints()
       this.addPoints(this.point_ty)
@@ -378,7 +378,9 @@ export default {
             // await this.pointApi(this.$store.state.nowAirport, '1000h')
             console.log(this.$store.state.nowAirport)
 
-
+            if (this.$store.state.nowAirport[0].demo === '1') {
+              this.postData2(this.$store.state.nowAirport[0].four)
+            }
 
 
 

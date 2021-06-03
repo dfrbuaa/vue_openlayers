@@ -116,32 +116,21 @@ module.exports = {
     modules: false
 
   },
-
   devServer: {
-
-    port: 8080,
-
-    host: "0.0.0.0",
-
-    https: false,
-
-    // 自动启动浏览器
-
-    open: false,
-
     proxy: {
-      "/api": {
-        //代理路径 例如 https://baidu.com
-        target: "https://baidu.com",
-        // 将主机标头的原点更改为目标URL
+
+      '/myapi': {
+        //是否允许跨域
         changeOrigin: true,
-        ws: true,
+        target: 'http://www.avt7.com',
         pathRewrite: {
-          "^/api": ""
+          '^/myapi': ''
         }
+
       }
     }
-
   }
+
+
 
 };

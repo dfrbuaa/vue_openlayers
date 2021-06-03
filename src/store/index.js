@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 import * as echarts from 'echarts';
+import jsonp from "fetch-jsonp";
+
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -29,7 +31,9 @@ export default new Vuex.Store({
     f2: null,
     f3: null,
     alarmList: [],
-    alarmColor: null
+    alarmColor: null,
+    metar: null,
+    taf: null
 
   },
   mutations: {
@@ -195,16 +199,34 @@ export default new Vuex.Store({
       state.f1 = data.f1;
       state.f2 = data.f2;
       state.f3 = data.f3;
-      let list = []
-      for (let i = 0; i < data.alarmList.length; i++) {
-        list.push(data.alarmList[i].issueTime)
-      }
+
       if (data.alarmList) {
         state.alarmList = data.alarmList.pop();
         if (state.alarmList.signalLevel === "黄色") state.alarmColor = 'yellow';
         if (state.alarmList.signalLevel === "红色") state.alarmColor = 'red'
         if (state.alarmList.signalLevel === "蓝色") state.alarmColor = '#66eeff'
+        if (state.alarmList.signalLevel === "橙色") state.alarmColor = 'rgb(255 187 76)'
+      } else {
+        state.alarmList = []
       }
+
+
+    },
+    pointApi2 (state, res) {
+      if (res.metarContentList.rows) {
+        state.metar = res.metarContentList.rows;
+      } else {
+        state.metar = []
+      }
+      if (res.metarContentList.rows) {
+        state.taf = res.tafContentList.rows;
+      } else {
+        state.taf = []
+      }
+
+
+
+
 
 
     }
@@ -324,7 +346,7 @@ export default new Vuex.Store({
 
   actions: {
 
-    async postData ({ commit, }, params) {
+    async postData ({ commit }, params) {
       console.log(params.hpa)
       console.log(parseFloat(params.lat))
       console.log(parseFloat(params.lng))
@@ -348,7 +370,7 @@ export default new Vuex.Store({
 
       commit('pointApi', res)
     },
-    async postData1 ({ commit, }, latlng) {
+    async postData1 ({ commit }, latlng) {
 
 
       const res = await axios({
@@ -382,6 +404,19 @@ export default new Vuex.Store({
         }
       })
       commit('pointApi1', res)
+    },
+    async postData2 ({ commit }, params) {
+      console.log('yyyyyyyyyyy')
+      const res = await axios({
+        method: 'get',
+        url: `/myapi/Home/AirportMetarInfo?airport4Code=${params}`,
+
+      })
+
+
+
+      commit('pointApi2', res.data)
+
     }
 
   },

@@ -20,9 +20,7 @@
           <tr>
             <td colspan="1" v-for="(item, i) in hourDataList" :key="i">{{ item.weather }}</td>
           </tr>
-          <tr>
-            <td colspan="1" v-for="(item, i) in hourDataList" :key="i"></td>
-          </tr>
+
           <tr>
             <td colspan="1" v-for="(item, i) in hourDataList" :key="i">{{ item.temperature }}°</td>
           </tr>
@@ -52,7 +50,7 @@
     </div>
     <div id="head" class="ff">
       <div>时间 <i class="el-icon-time" /></div>
-      <div>天气 <i class="el-icon-time" /></div>
+      <div>天气</div>
       <div>温度℃</div>
 
       <div>湿度<i>%</i></div>
@@ -236,8 +234,12 @@
       <div id="issue">
         <div><i class="el-icon-message-solid"></i> 预警</div>
         <div id="issueContent" v-if="alarmList">
-          <div class="signal" :style="{ background: this.alarmColor }">{{ this.alarmList.signalLevel }}</div>
+          <div class="signal" :style="{ background: this.alarmColor }">
+            {{ this.alarmList.signalLevel }}<i>({{ this.alarmList.signalType }})</i>
+          </div>
+
           <div class="issueTime">{{ this.alarmList.issueTime }}</div>
+          -----------------------------------------------
           <div class="content">{{ this.alarmList.issueContent }}</div>
         </div>
         <div id="issueContent1" v-if="!alarmList">暂无</div>
@@ -286,7 +288,10 @@ export default {
 #head > div {
   text-align: right;
 
-  padding: 3px 4px 4px 4px;
+  padding: 5px 4px 4px 4px;
+}
+#head > :nth-child(2) {
+  padding: 49px 4px 4px 4px !important;
 }
 #right {
   margin-left: -900px;
@@ -370,7 +375,8 @@ div {
 table > tr > td {
   min-width: 35px;
 }
-.ff > div > :nth-child(1) {
+#now > div > :nth-child(1),
+#right > div > :nth-child(1) {
   position: absolute;
   top: 10px;
 }

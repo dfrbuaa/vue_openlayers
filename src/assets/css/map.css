@@ -1,3 +1,35 @@
+#sou{
+       width: 253px;
+    height: 30px;
+    top: 5px;
+    background: #ffffff;
+    position: absolute;
+    z-index: 1;
+    left: 40px;
+    border: 2px solid #6b6b6b;
+    border-radius: 20px;
+    padding: 5px;
+    box-sizing: border-box;
+}
+#sou>i{
+  left: 6px;
+   
+    position: relative;
+    top: -3px;
+}
+#sou > input{
+  
+    position: relative;
+    top: -4px;
+   
+    left: 12px;
+    width: 189px;
+    box-sizing: border-box;
+    height: 20px;
+    font-size: 17px;
+    border: 0px
+    
+}
 #tuli {
   position: absolute;
   z-index:1;
@@ -6,8 +38,8 @@
   width: 180px;
   height: 110px;
   line-height: 26px;
-  background-color: #111;
-  opacity: 0.6;
+    background-color: #0000008c;
+
   right: 50px;
   bottom: 49px;
   right: 10px;
