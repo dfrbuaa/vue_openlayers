@@ -388,6 +388,7 @@ table > tr > td {
   padding: 0px 5px;
   background: rgb(245 247 250);
   height: 280px;
+  overflow: auto;
 }
 
 #table1 > tr > td > img {
